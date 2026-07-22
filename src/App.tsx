@@ -39,6 +39,7 @@ import {
   ManageUsersPage,
   SettingsPage,
 } from './pages/hospital/OpsPages'
+import { PayAppointmentPage, PaymentsPage } from './pages/PaymentsPage'
 
 function MarketingLayout() {
   return (
@@ -90,6 +91,8 @@ export default function App() {
       <Route element={<RequireAuth roles={['patient']} />}>
         <Route element={<DashboardShell title="Patient workspace" />}>
           <Route path="my-appointments" element={<PatientAppointmentsPage />} />
+          <Route path="payments" element={<PaymentsPage />} />
+          <Route path="pay/:id" element={<PayAppointmentPage />} />
           <Route path="messages" element={<MessagesPage />} />
           <Route path="medications" element={<MedicationsPage />} />
           <Route path="my-prescriptions" element={<MedicationsPage />} />
@@ -133,6 +136,7 @@ export default function App() {
           <Route path="doctor-approvals" element={<ApprovalsPage title="Doctor approvals" />} />
           <Route path="hospital-approvals" element={<ApprovalsPage title="Hospital approvals" />} />
           <Route path="all-appointments" element={<AllAppointmentsPage />} />
+          <Route path="payment-approvals" element={<HospitalReportsPage />} />
           <Route path="announcements" element={<AnnouncementsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>

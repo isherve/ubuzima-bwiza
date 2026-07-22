@@ -1,6 +1,12 @@
 import { StatGrid, StatusBadge } from '../../components/dashboard/Shell'
 import { useAuth } from '../../context/AuthContext'
 import { demoUsers, doctors } from '../../data'
+import {
+  appointmentsTableHtml,
+  downloadAppointmentsCsv,
+  downloadPrintableReport,
+  formatRwf,
+} from '../../lib/reports'
 
 export function HospitalDashboardPage() {
   const { appointments } = useAuth()
@@ -85,14 +91,63 @@ export function HospitalAppointmentsPage() {
 }
 
 export function HospitalReportsPage() {
+  const { appointments, user } = useAuth()
+  const paidTotal = appointments
+    .filter((a) => a.paymentStatus === 'paid')
+    .reduce((sum, a) => sum + (a.amount || 0), 0)
+  const unpaidCount = appointments.filter((a) => a.paymentStatus !== 'paid').length
+
+  const downloadCsv = () =>
+    downloadAppointmentsCsv(appointments, `ubuzima-report-${Date.now()}.csv`)
+
+  const downloadPdf = () =>
+    downloadPrintableReport({
+      title: 'Operations report',
+      subtitle: `${user?.hospital ?? user?.name ?? 'Workspace'} · Ubuzima Bwiza`,
+      htmlBody: `
+        <p class="meta"><strong>Total appointments:</strong> ${appointments.length}</p>
+        <p class="meta"><strong>Paid revenue:</strong> ${formatRwf(paidTotal)}</p>
+        <p class="meta"><strong>Unpaid invoices:</strong> ${unpaidCount}</p>
+        ${appointmentsTableHtml(appointments)}
+      `,
+    })
+
   return (
     <div className="stack">
-      <h2>Reports</h2>
+      <div className="toolbar">
+        <h2>Reports</h2>
+        <div className="row-actions">
+          <button type="button" className="btn btn-outline" onClick={downloadCsv}>
+            Download CSV
+          </button>
+          <button type="button" className="btn btn-primary" onClick={downloadPdf}>
+            Download PDF report
+          </button>
+        </div>
+      </div>
+      <StatGrid
+        items={[
+          { label: 'Appointments', value: appointments.length },
+          { label: 'Paid revenue', value: formatRwf(paidTotal) },
+          { label: 'Unpaid', value: unpaidCount },
+          {
+            label: 'Video visits',
+            value: appointments.filter((a) => a.type === 'video').length,
+          },
+        ]}
+      />
       <div className="features">
         {[
-          ['Weekly visits', ' thr appointments across departments'],
-          ['Teleconsult ratio', '62% video vs 38% in-person'],
-          ['No-show rate', '7% this month'],
+          ['Weekly visits', `${appointments.length} appointments on record`],
+          [
+            'Teleconsult ratio',
+            `${Math.round(
+              (appointments.filter((a) => a.type === 'video').length /
+                Math.max(appointments.length, 1)) *
+                100,
+            )}% video consultations`,
+          ],
+          ['Collections', `${formatRwf(paidTotal)} received · ${unpaidCount} unpaid`],
         ].map(([title, body]) => (
           <article className="feature" key={title}>
             <h3>{title}</h3>

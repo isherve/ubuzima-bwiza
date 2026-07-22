@@ -5,6 +5,11 @@ import { AiChat, MessagesChat } from '../../components/AiChat'
 import { useAuth } from '../../context/AuthContext'
 import { medications, records } from '../../data'
 import { askHealthAi } from '../../lib/aiClient'
+import {
+  appointmentsTableHtml,
+  downloadAppointmentsCsv,
+  downloadPrintableReport,
+} from '../../lib/reports'
 
 export function PatientAppointmentsPage() {
   const { user, appointments } = useAuth()
@@ -16,14 +21,30 @@ export function PatientAppointmentsPage() {
         items={[
           { label: 'Total', value: mine.length },
           { label: 'Approved', value: mine.filter((a) => a.status === 'approved').length },
-          { label: 'Pending', value: mine.filter((a) => a.status === 'pending').length },
+          { label: 'Unpaid', value: mine.filter((a) => a.paymentStatus !== 'paid').length },
         ]}
       />
       <div className="toolbar">
         <h2>My appointments</h2>
-        <Link to="/doctors" className="btn btn-primary">
-          Book new
-        </Link>
+        <div className="row-actions">
+          <button
+            type="button"
+            className="btn btn-outline"
+            onClick={() => {
+              downloadAppointmentsCsv(mine, `ubuzima-appointments-${Date.now()}.csv`)
+              downloadPrintableReport({
+                title: 'My appointments report',
+                subtitle: `${user?.name ?? 'Patient'} · Ubuzima Bwiza`,
+                htmlBody: appointmentsTableHtml(mine),
+              })
+            }}
+          >
+            Download report
+          </button>
+          <Link to="/doctors" className="btn btn-primary">
+            Book new
+          </Link>
+        </div>
       </div>
       <div className="table">
         {mine.length === 0 ? (
@@ -34,10 +55,23 @@ export function PatientAppointmentsPage() {
               <div>
                 <strong>{apt.doctorName}</strong>
                 <p>
-                  {apt.specialty} · {apt.date} at {apt.time} · {apt.type}
+                  {apt.specialty} · {apt.date} at {apt.time} · {apt.type} ·{' '}
+                  {(apt.amount ?? 0).toLocaleString()} RWF
                 </p>
               </div>
-              <StatusBadge status={apt.status} />
+              <div className="row-actions">
+                <StatusBadge status={apt.status} />
+                <StatusBadge status={apt.paymentStatus ?? 'unpaid'} />
+                {apt.paymentStatus !== 'paid' ? (
+                  <Link to={`/pay/${apt.id}`} className="btn btn-primary">
+                    Pay
+                  </Link>
+                ) : (
+                  <Link to="/payments" className="btn btn-outline">
+                    Receipt
+                  </Link>
+                )}
+              </div>
             </div>
           ))
         )}

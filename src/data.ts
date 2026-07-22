@@ -23,6 +23,9 @@ export type Doctor = {
   bio: string
 }
 
+export type PaymentStatus = 'unpaid' | 'pending' | 'paid' | 'failed' | 'refunded'
+export type PaymentMethod = 'momo' | 'airtel' | 'card' | 'cash'
+
 export type Appointment = {
   id: string
   doctorId: string
@@ -34,6 +37,11 @@ export type Appointment = {
   status: 'pending' | 'approved' | 'completed' | 'rejected' | 'cancelled'
   type: 'in-person' | 'video'
   notes?: string
+  amount: number
+  paymentStatus: PaymentStatus
+  paymentMethod?: PaymentMethod
+  paidAt?: string
+  receiptId?: string
 }
 
 export const specialties = [
@@ -175,6 +183,8 @@ export const initialAppointments: Appointment[] = [
     status: 'approved',
     type: 'video',
     notes: 'Follow-up for blood pressure review',
+    amount: 25000,
+    paymentStatus: 'unpaid',
   },
   {
     id: 'apt2',
@@ -186,6 +196,8 @@ export const initialAppointments: Appointment[] = [
     time: '14:30',
     status: 'pending',
     type: 'in-person',
+    amount: 20000,
+    paymentStatus: 'unpaid',
   },
   {
     id: 'apt3',
@@ -197,6 +209,11 @@ export const initialAppointments: Appointment[] = [
     time: '09:00',
     status: 'pending',
     type: 'video',
+    amount: 25000,
+    paymentStatus: 'paid',
+    paymentMethod: 'momo',
+    paidAt: '2026-07-22T10:15:00',
+    receiptId: 'RCP-1003',
   },
 ]
 

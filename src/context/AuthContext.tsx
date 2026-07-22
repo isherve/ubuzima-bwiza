@@ -13,6 +13,7 @@ import {
   doctors,
   initialAppointments,
   type Appointment,
+  type PaymentMethod,
   type Role,
   type User,
 } from '../data'
@@ -34,22 +35,53 @@ type AuthContextValue = {
     time: string
     type: 'in-person' | 'video'
     notes?: string
-  }) => { ok: boolean; message: string }
+  }) => { ok: boolean; message: string; appointmentId?: string }
   updateAppointmentStatus: (id: string, status: Appointment['status']) => void
+  payAppointment: (
+    id: string,
+    method: PaymentMethod,
+  ) => { ok: boolean; message: string; receiptId?: string }
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
-const USER_KEY = 'ohl_user'
-const APT_KEY = 'ohl_appointments'
+const USER_KEY = 'ub_user'
+const APT_KEY = 'ub_appointments'
+
+function normalizeAppointment(raw: Partial<Appointment> & { id: string }): Appointment {
+  const doctor = doctors.find((d) => d.id === raw.doctorId || d.name === raw.doctorName)
+  return {
+    id: raw.id,
+    doctorId: raw.doctorId ?? doctor?.id ?? 'doc1',
+    doctorName: raw.doctorName ?? doctor?.name ?? 'Doctor',
+    specialty: raw.specialty ?? doctor?.specialty ?? 'General practitioner',
+    patientName: raw.patientName ?? 'Patient',
+    date: raw.date ?? '',
+    time: raw.time ?? '',
+    status: raw.status ?? 'pending',
+    type: raw.type ?? 'video',
+    notes: raw.notes,
+    amount: raw.amount ?? doctor?.fee ?? 15000,
+    paymentStatus: raw.paymentStatus ?? 'unpaid',
+    paymentMethod: raw.paymentMethod,
+    paidAt: raw.paidAt,
+    receiptId: raw.receiptId,
+  }
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
-    const raw = localStorage.getItem(USER_KEY)
+    const raw = localStorage.getItem(USER_KEY) ?? localStorage.getItem('ohl_user')
     return raw ? (JSON.parse(raw) as User) : null
   })
   const [appointments, setAppointments] = useState<Appointment[]>(() => {
-    const raw = localStorage.getItem(APT_KEY)
-    return raw ? (JSON.parse(raw) as Appointment[]) : initialAppointments
+    const raw = localStorage.getItem(APT_KEY) ?? localStorage.getItem('ohl_appointments')
+    if (!raw) return initialAppointments
+    try {
+      const parsed = JSON.parse(raw) as Appointment[]
+      return parsed.map((a) => normalizeAppointment(a))
+    } catch {
+      return initialAppointments
+    }
   })
 
   useEffect(() => {
@@ -113,15 +145,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         status: 'pending',
         type: input.type,
         notes: input.notes,
+        amount: doctor.fee,
+        paymentStatus: 'unpaid',
       }
       setAppointments((prev) => [apt, ...prev])
-      return { ok: true, message: 'Appointment requested successfully.' }
+      return {
+        ok: true,
+        message: 'Appointment requested. Please complete payment to confirm.',
+        appointmentId: apt.id,
+      }
     },
     [user],
   )
 
   const updateAppointmentStatus = useCallback((id: string, status: Appointment['status']) => {
     setAppointments((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
+  }, [])
+
+  const payAppointment = useCallback((id: string, method: PaymentMethod) => {
+    let receiptId = ''
+    setAppointments((prev) =>
+      prev.map((a) => {
+        if (a.id !== id) return a
+        if (a.paymentStatus === 'paid') return a
+        receiptId = `RCP-${Date.now().toString().slice(-8)}`
+        return {
+          ...a,
+          paymentStatus: 'paid',
+          paymentMethod: method,
+          paidAt: new Date().toISOString(),
+          receiptId,
+          status: a.status === 'pending' ? 'approved' : a.status,
+        }
+      }),
+    )
+    if (!receiptId) return { ok: false, message: 'Payment already completed or appointment missing.' }
+    return { ok: true, message: 'Payment successful.', receiptId }
   }, [])
 
   const value = useMemo(
@@ -133,8 +192,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       bookAppointment,
       updateAppointmentStatus,
+      payAppointment,
     }),
-    [user, appointments, login, register, logout, bookAppointment, updateAppointmentStatus],
+    [
+      user,
+      appointments,
+      login,
+      register,
+      logout,
+      bookAppointment,
+      updateAppointmentStatus,
+      payAppointment,
+    ],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -156,7 +156,10 @@ export function BookAppointmentPage() {
     const result = bookAppointment({ doctorId: doctor.id, date, time, type, notes })
     setMessage(result.message)
     if (result.ok) {
-      window.setTimeout(() => navigate('/my-appointments'), 700)
+      window.setTimeout(
+        () => navigate(result.appointmentId ? `/pay/${result.appointmentId}` : '/payments'),
+        700,
+      )
     }
   }
 

@@ -1329,3 +1329,15 @@ h3 {
 @media (min-width: 900px) {
   .msg-layout { grid-template-columns: 280px 1fr; }
 }
+
+.pay-methods { display:grid; gap:0.55rem; }
+.pay-method { border:1px solid var(--border); background:#fff; border-radius:14px; padding:0.85rem 1rem; text-align:left; cursor:pointer; display:grid; gap:0.2rem; }
+.pay-method strong { color: var(--ink); }
+.pay-method span { color: var(--ink-soft); font-size:0.8rem; }
+.pay-method.active { border-color: var(--teal); background: linear-gradient(135deg, rgba(204,251,241,0.7), rgba(224,242,254,0.8)); }
+.highlight-row { outline: 2px solid var(--teal); }
+.badge-unpaid { background:#ffedd5; color:#c2410c; }
+.badge-paid { background:#ccfbf1; color:#0f766e; }
+.badge-pending { background:#fef3c7; color:#92400e; }
+.badge-failed { background:#fee2e2; color:#b91c1c; }
+.badge-refunded { background:#e5e7eb; color:#374151; }

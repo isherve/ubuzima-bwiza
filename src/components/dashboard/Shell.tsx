@@ -4,6 +4,7 @@ import type { Role } from '../../data'
 
 const patientLinks = [
   ['/my-appointments', 'Appointments'],
+  ['/payments', 'Payments'],
   ['/doctors', 'Find doctors'],
   ['/messages', 'Messages'],
   ['/medications', 'Medications'],
@@ -19,6 +20,7 @@ const doctorLinks = [
   ['/doctor-calendar', 'Calendar'],
   ['/patients', 'Patients'],
   ['/doctor/availability', 'Availability'],
+  ['/doctor-reports', 'Reports'],
   ['/doctor-messages', 'Messages'],
   ['/doctor-profile', 'Profile'],
 ]
@@ -39,6 +41,7 @@ const adminLinks = [
   ['/doctor-approvals', 'Doctor approvals'],
   ['/hospital-approvals', 'Hospital approvals'],
   ['/all-appointments', 'All appointments'],
+  ['/payment-approvals', 'Payments'],
   ['/announcements', 'Announcements'],
   ['/settings', 'Settings'],
 ]
