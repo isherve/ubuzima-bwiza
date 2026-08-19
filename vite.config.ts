@@ -10,7 +10,10 @@ export default defineConfig(({ mode }) => {
   if (env.OPENAI_BASE_URL?.trim()) process.env.OPENAI_BASE_URL = env.OPENAI_BASE_URL.trim()
   if (env.AI_MODEL?.trim()) process.env.AI_MODEL = env.AI_MODEL.trim()
 
+  const githubPages = process.env.GITHUB_PAGES === 'true'
+
   return {
+    base: githubPages ? '/ubuzima-bwiza/' : '/',
     plugins: [react(), aiApiPlugin()],
     server: {
       port: 5173,
