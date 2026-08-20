@@ -1,4 +1,4 @@
-import { doctors } from '../src/data'
+import { doctors, type Doctor } from '../src/data.js'
 
 export type ChatMessage = { role: 'user' | 'assistant' | 'system'; content: string }
 
@@ -64,12 +64,12 @@ export function localAssistantReply(messages: ChatMessage[]): AiChatResult {
         'This may be urgent. Seek emergency care now — call emergency services or go to the nearest hospital. Do not wait for an online consultation. After you are safe, you can use Ubuzima Bwiza for follow-up with a specialist.\n\nDisclaimer: This is preliminary guidance only, not a medical diagnosis.',
       mode: 'local',
       specialty: 'General practitioner',
-      doctors: doctors.filter((d) => d.specialty === 'General practitioner').slice(0, 2),
+      doctors: doctors.filter((d: Doctor) => d.specialty === 'General practitioner').slice(0, 2),
     }
   }
 
   const specialty = detectSpecialty(lastUser) ?? 'General practitioner'
-  const matches = doctors.filter((d) => d.specialty === specialty).slice(0, 2)
+  const matches = doctors.filter((d: Doctor) => d.specialty === specialty).slice(0, 2)
   const tips =
     specialty === 'Cardiologist'
       ? 'Avoid heavy exertion, note your blood pressure if possible, and book a cardiology review soon.'
@@ -146,7 +146,7 @@ async function llmReply(messages: ChatMessage[]): Promise<AiChatResult | null> {
 
   const lastMessage = messages[messages.length - 1]
   const specialty = detectSpecialty(reply) || detectSpecialty(lastMessage?.content || '')
-  const matched = specialty ? doctors.filter((d) => d.specialty === specialty).slice(0, 2) : []
+  const matched = specialty ? doctors.filter((d: Doctor) => d.specialty === specialty).slice(0, 2) : []
 
   return {
     reply,
