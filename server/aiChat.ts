@@ -1,4 +1,4 @@
-import { doctors } from '../src/data.ts'
+import { doctors } from '../src/data'
 
 export type ChatMessage = { role: 'user' | 'assistant' | 'system'; content: string }
 
@@ -144,7 +144,8 @@ async function llmReply(messages: ChatMessage[]): Promise<AiChatResult | null> {
   const reply = data.choices?.[0]?.message?.content?.trim()
   if (!reply) throw new Error('Empty AI response')
 
-  const specialty = detectSpecialty(reply) || detectSpecialty(messages.at(-1)?.content || '')
+  const lastMessage = messages[messages.length - 1]
+  const specialty = detectSpecialty(reply) || detectSpecialty(lastMessage?.content || '')
   const matched = specialty ? doctors.filter((d) => d.specialty === specialty).slice(0, 2) : []
 
   return {
