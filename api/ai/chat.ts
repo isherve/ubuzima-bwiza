@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { handleAiChat, type ChatMessage } from '../../server/aiChat'
+import { handleAiChat, type ChatMessage } from '../../server/aiChat.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') {
