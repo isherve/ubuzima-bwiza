@@ -114,7 +114,7 @@ async function llmReply(messages: ChatMessage[]): Promise<AiChatResult | null> {
     : process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
   const model =
     process.env.AI_MODEL ||
-    (groqKey ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini')
+    (groqKey ? 'openai/gpt-oss-120b' : 'gpt-4o-mini')
 
   const response = await fetch(`${baseUrl}/chat/completions`, {
     method: 'POST',
