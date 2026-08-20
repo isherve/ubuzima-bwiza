@@ -1,5 +1,5 @@
 import type { Handler } from '@netlify/functions'
-import { handleAiChat, type ChatMessage } from '../../server/aiChat.ts'
+import { handleAiChat, type ChatMessage } from '../../server/aiChat'
 
 export const handler: Handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
