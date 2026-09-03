@@ -1,4 +1,4 @@
-import type { Appointment, PaymentMethod } from '../data'
+﻿import type { Appointment, PaymentMethod } from '../data'
 
 export function formatRwf(amount: number) {
   return `${amount.toLocaleString()} RWF`
@@ -67,7 +67,7 @@ export function methodLabel(method?: PaymentMethod) {
     case 'cash':
       return 'Cash at facility'
     default:
-      return '—'
+      return ','
   }
 }
 
@@ -107,7 +107,7 @@ export function downloadPrintableReport(options: {
   <h1>${options.title}</h1>
   ${options.subtitle ? `<p class="sub">${options.subtitle}</p>` : ''}
   ${options.htmlBody}
-  <p class="footer">Generated ${new Date().toLocaleString()} · Keep this document for your records.</p>
+  <p class="footer">Generated ${new Date().toLocaleString()} | Keep this document for your records.</p>
   <p class="no-print"><button onclick="window.print()">Print / Save as PDF</button></p>
   <script>setTimeout(() => window.print(), 350)</script>
 </body>
@@ -120,9 +120,9 @@ export function appointmentReceiptHtml(a: Appointment) {
     <p class="meta"><strong>Receipt:</strong> ${a.receiptId ?? 'Pending'}</p>
     <p class="meta"><strong>Patient:</strong> ${a.patientName}</p>
     <p class="meta"><strong>Doctor:</strong> ${a.doctorName} (${a.specialty})</p>
-    <p class="meta"><strong>Visit:</strong> ${a.date} at ${a.time} · ${a.type}</p>
+    <p class="meta"><strong>Visit:</strong> ${a.date} at ${a.time} | ${a.type}</p>
     <p class="meta"><strong>Amount:</strong> ${formatRwf(a.amount)}</p>
-    <p class="meta"><strong>Payment:</strong> ${a.paymentStatus}${a.paymentMethod ? ` · ${methodLabel(a.paymentMethod)}` : ''}</p>
+    <p class="meta"><strong>Payment:</strong> ${a.paymentStatus}${a.paymentMethod ? ` | ${methodLabel(a.paymentMethod)}` : ''}</p>
     ${a.paidAt ? `<p class="meta"><strong>Paid at:</strong> ${new Date(a.paidAt).toLocaleString()}</p>` : ''}
     ${a.notes ? `<p class="meta"><strong>Notes:</strong> ${a.notes}</p>` : ''}
   `

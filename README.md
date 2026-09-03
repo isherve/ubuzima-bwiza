@@ -1,4 +1,4 @@
-# Ubuzima Bwiza — full local copy
+# Ubuzima Bwiza: full local copy
 
 Complete front-end clone of the Ubuzima Bwiza experience with working demo auth and dashboards.
 

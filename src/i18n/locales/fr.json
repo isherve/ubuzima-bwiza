@@ -1,4 +1,4 @@
-{
+﻿{
   "nav": {
     "findDoctor": "Trouver un médecin",
     "doctors": "Médecins",
@@ -10,11 +10,23 @@
     "getStarted": "Commencer",
     "dashboard": "Tableau de bord",
     "logout": "Déconnexion",
-    "language": "Langue"
+    "language": "Langue",
+    "help": "Aide et FAQ",
+    "menu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
+  },
+  "theme": {
+    "appearance": "Apparence",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système",
+    "switchToLight": "Passer au mode clair",
+    "switchToDark": "Passer au mode sombre"
   },
   "footer": {
     "rights": "Tous droits réservés",
-    "hosted": "Données protégées et hébergées par AOS"
+    "hosted": "Données protégées et hébergées par AOS",
+    "academic": "Prototype de démonstration académique. Il ne s'agit pas d'un service clinique agréé."
   },
   "common": {
     "book": "Réserver",
@@ -36,7 +48,7 @@
   "home": {
     "pill": "Soins numériques de confiance",
     "title": "Prenez rendez-vous avec des médecins et hôpitaux de confiance",
-    "subtitle": "Trouvez le bon spécialiste, comparez les options et planifiez votre visite en quelques clics — où que vous soyez au Rwanda.",
+    "subtitle": "Trouvez le bon spécialiste, comparez les options et planifiez votre visite en quelques clics, où que vous soyez au Rwanda.",
     "specialty": "Spécialité",
     "specialtyPlaceholder": "Choisir une spécialité (ex. cardiologie, pédiatrie...)",
     "careType": "Type de soins",
@@ -50,7 +62,7 @@
     "statDoctors": "Médecins top",
     "statAccess": "Accès numérique",
     "featuresTitle": "Des soins connectés pour chaque profession",
-    "featuresLead": "Médecin, ouvrier, agriculteur ou artiste — Ubuzima Bwiza met la consultation médicale à portée de main.",
+    "featuresLead": "Médecin, ouvrier, agriculteur ou artiste, Ubuzima Bwiza met la consultation médicale à portée de main.",
     "feature1Title": "Spécialistes vérifiés",
     "feature1Body": "Cliniciens contrôlés avant d'entrer sur la plateforme.",
     "feature2Title": "Accès 24/7",
@@ -80,13 +92,13 @@
     "storiesLead": "Témoignages de patients qui utilisent Ubuzima Bwiza.",
     "story1Quote": "J'ai trouvé un médecin rapidement et facilement. L'aide par chat m'a rassurée.",
     "story1Name": "Mukamana Aline",
-    "story1Role": "Patiente · Kigali",
+    "story1Role": "Patiente | Kigali",
     "story2Quote": "La téléconsultation nous a évité des heures de route quand mon fils avait de la fièvre.",
     "story2Name": "Claudine Niyonzima",
     "story2Role": "Mère de deux enfants",
     "story3Quote": "J'ai réservé un spécialiste sans quitter mon district. Le suivi de l'hypertension est enfin simple.",
     "story3Name": "Patrick Habimana",
-    "story3Role": "Agriculteur · Musanze",
+    "story3Role": "Agriculteur | Musanze",
     "ctaTitle": "Rejoignez le réseau médical le plus fiable du Rwanda",
     "ctaBody": "Créez un compte gratuit pour la télémédecine, votre historique médical et des rendez-vous avec des spécialistes rwandais.",
     "ctaPrimary": "Commencer",
@@ -216,13 +228,13 @@
     "platformLead": "Superviser utilisateurs, approbations, annonces et contenu du site.",
     "manageUsers": "Gérer les utilisateurs",
     "pendingApp": "Demande en attente #1042",
-    "pendingMeta": "Soumise il y a 2 jours · en attente de revue",
+    "pendingMeta": "Soumise il y a 2 jours | en attente de revue",
     "contentTitle": "Éditeur de contenu",
     "contentLead": "Modifiez le marketing, les textes légaux, annonces et bios médecins en 3 langues.",
     "selectSection": "Section",
     "fieldLabel": "Champ",
     "defaultLocale": "Langue par défaut",
-    "themeNote": "Thème : Ubuzima Bwiza emerald",
+    "themeNote": "Thème : mode clair, sombre ou système avec les accents emerald Ubuzima Bwiza",
     "securityNote": "Sécurité : 2FA disponible en production"
   },
   "payments": {
@@ -239,7 +251,7 @@
     "subtitle": "Décrivez vos symptômes pour obtenir des conseils et des spécialistes suggérés.",
     "thinking": "Réflexion…",
     "suggestedDoctors": "Spécialistes suggérés",
-    "floatLabel": "✦ Chat IA",
+    "floatLabel": "Chat IA",
     "promptHeadache": "J'ai mal à la tête et de la fièvre",
     "promptHeadacheRw": "Ndashoje umutwe kandi mfite umuriro",
     "promptMeds": "Aidez-moi à préparer ma visite médicale"
@@ -268,5 +280,38 @@
     "Ophthalmologist": "Ophtalmologue",
     "Endocrinologist": "Endocrinologue",
     "Psychiatrist": "Psychiatre"
+  },
+  "emergency": {
+    "label": "Urgence :",
+    "body": "Cette plateforme n'est pas destinée aux urgences vitales. Appelez le 112 ou le SAMU 912, ou rendez-vous à l'hôpital le plus proche."
+  },
+  "demo": {
+    "notice": "Démonstration académique : connexions, paiements et dossiers sont simulés. N'entrez pas de vraies données patient.",
+    "dismiss": "Compris"
+  },
+  "a11y": {
+    "skip": "Aller au contenu principal"
+  },
+  "notFound": {
+    "title": "Cette page n'est pas disponible",
+    "body": "Le lien est peut-être incorrect. Revenez à l'accueil, contactez la réception ou demandez à l'assistant IA.",
+    "home": "Retour à l'accueil"
+  },
+  "help": {
+    "pill": "Centre d'aide",
+    "title": "Comment fonctionne Ubuzima Bwiza",
+    "lead": "Réponses courtes pour les patients, les cliniciens et les examinateurs. En cas d'urgence, appelez d'abord le 112 ou le SAMU 912.",
+    "q1": "L'assistant IA est-il un médecin ?",
+    "a1": "Non. Il donne uniquement une orientation préliminaire et des suggestions de spécialistes. Il ne diagnostique pas, ne prescrit pas et ne remplace pas les urgences.",
+    "q2": "Comment réserver et payer ?",
+    "a2": "Cherchez un médecin, choisissez une date et un type de visite, puis payez avec MTN MoMo, Airtel Money, carte ou espèces. Les montants sont en FRW.",
+    "q3": "Quelles langues sont prises en charge ?",
+    "a3": "Anglais, kinyarwanda et français. Utilisez le sélecteur d'en-tête. L'IA peut répondre dans la langue que vous écrivez.",
+    "q4": "Qui peut se connecter ?",
+    "a4": "Patients, médecins, hôpitaux et un administrateur ont chacun un espace. Utilisez les comptes de démonstration sur la page de connexion.",
+    "q5": "Que faire en cas d'urgence ?",
+    "a5": "N'attendez pas un chat en ligne. Appelez le 112 ou le SAMU 912, ou allez immédiatement à l'hôpital le plus proche.",
+    "q6": "Mes données sont-elles sécurisées dans cette version ?",
+    "a6": "Ce prototype académique stocke des données de démonstration dans le navigateur pour l'oral. Une version de production utiliserait un serveur sécurisé, un chiffrement et des journaux d'audit."
   }
 }

@@ -1,6 +1,8 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ThemeToggle } from '../components/ThemeToggle'
+import { LanguageSwitcher } from '../components/LanguageSwitcher'
 import { dashboardPath, useAuth } from '../context/AuthContext'
 
 export function LoginPage() {
@@ -29,6 +31,10 @@ export function LoginPage() {
 
   return (
     <div className="auth-page">
+      <div className="auth-toolbar">
+        <LanguageSwitcher compact />
+        <ThemeToggle compact />
+      </div>
       <div className="auth-bg" aria-hidden>
         <img src="/assets/appointment.png" alt="" />
       </div>
@@ -69,16 +75,16 @@ export function LoginPage() {
             <div className="demo-box">
               <strong>Demo accounts</strong>
               <button type="button" onClick={() => { setEmail('patient@ubuzimabwiza.com'); setPassword('patient123') }}>
-                Patient · patient@ubuzimabwiza.com / patient123
+                Patient | patient@ubuzimabwiza.com / patient123
               </button>
               <button type="button" onClick={() => { setEmail('doctor@ubuzimabwiza.com'); setPassword('doctor123') }}>
-                Doctor · doctor@ubuzimabwiza.com / doctor123
+                Doctor | doctor@ubuzimabwiza.com / doctor123
               </button>
               <button type="button" onClick={() => { setEmail('hospital@ubuzimabwiza.com'); setPassword('hospital123') }}>
-                Hospital · hospital@ubuzimabwiza.com / hospital123
+                Hospital | hospital@ubuzimabwiza.com / hospital123
               </button>
               <button type="button" onClick={() => { setEmail('admin@ubuzimabwiza.com'); setPassword('admin123') }}>
-                Admin · admin@ubuzimabwiza.com / admin123
+                Admin | admin@ubuzimabwiza.com / admin123
               </button>
             </div>
 

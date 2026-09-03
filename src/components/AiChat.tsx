@@ -43,7 +43,7 @@ const seedMessages: Record<string, Bubble[]> = {
   ai: [
     {
       role: 'ai',
-      text: 'Hi — I am your Ubuzima Bwiza AI. Ask about symptoms, medications, or which specialist to book.',
+      text: 'Hi. I am your Ubuzima Bwiza AI. Ask about symptoms, medications, or which specialist to book.',
       time: 'Now',
     },
   ],
@@ -95,7 +95,7 @@ function DoctorSuggestions({
           <div>
             <strong>{doc.name}</strong>
             <span>
-              {doc.specialty} · {doc.hospital}
+              {doc.specialty} | {doc.hospital}
             </span>
           </div>
           <Link to={`/book/${doc.id}`} className="btn btn-primary">
@@ -115,7 +115,7 @@ type AiChatProps = {
 
 export function AiChat({
   title = 'AI Health Assistant',
-  subtitle = 'Preliminary guidance only — not a replacement for a licensed clinician.',
+  subtitle = 'Preliminary guidance only. Not a replacement for a licensed clinician.',
   compact = false,
 }: AiChatProps) {
   const [chat, setChat] = useState<Bubble[]>(seedMessages.ai)
@@ -123,6 +123,7 @@ export function AiChat({
   const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState<'local' | 'llm' | null>(null)
   const [warning, setWarning] = useState('')
+  const [consented, setConsented] = useState(() => localStorage.getItem('ub_ai_consent') === '1')
   const scroller = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -186,9 +187,30 @@ export function AiChat({
         </span>
       </div>
 
+      {!consented ? (
+        <div className="ai-consent" role="dialog" aria-labelledby="ai-consent-title">
+          <h3 id="ai-consent-title">Before you use the AI assistant</h3>
+          <p>
+            This assistant offers preliminary guidance only. It is not a doctor, cannot diagnose, and
+            must not replace emergency services. If you have chest pain, trouble breathing, stroke
+            signs, or severe bleeding, call 112 / SAMU 912 or go to the nearest hospital immediately.
+          </p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              localStorage.setItem('ub_ai_consent', '1')
+              setConsented(true)
+            }}
+          >
+            I understand — continue
+          </button>
+        </div>
+      ) : null}
+
       {warning ? <p className="ai-warning">{warning}</p> : null}
 
-      {!compact ? (
+      {!compact && consented ? (
         <div className="quick-prompts">
           {quickPrompts.map((prompt) => (
             <button key={prompt} type="button" onClick={() => void send(prompt)} disabled={loading}>
@@ -198,6 +220,7 @@ export function AiChat({
         </div>
       ) : null}
 
+      {consented ? (
       <form
         className="search-card auth-form ai-card"
         onSubmit={(e: FormEvent) => {
@@ -218,9 +241,9 @@ export function AiChat({
         </div>
 
         <div className="field">
-          <label htmlFor="ai-prompt">Message</label>
+          <label htmlFor={compact ? 'ai-prompt-mini' : 'ai-prompt'}>Message</label>
           <input
-            id="ai-prompt"
+            id={compact ? 'ai-prompt-mini' : 'ai-prompt'}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about symptoms, meds, or which doctor to book..."
@@ -232,6 +255,7 @@ export function AiChat({
           {loading ? 'Analyzing…' : 'Send'}
         </button>
       </form>
+      ) : null}
     </div>
   )
 }
@@ -363,10 +387,7 @@ export function MessagesChat() {
             className={`msg-thread${activeId === thread.id ? ' active' : ''}${thread.kind === 'ai' ? ' ai' : ''}`}
             onClick={() => setActiveId(thread.id)}
           >
-            <strong>
-              {thread.kind === 'ai' ? '✦ ' : ''}
-              {thread.title}
-            </strong>
+            <strong>{thread.title}</strong>
             <span>{thread.subtitle}</span>
           </button>
         ))}
@@ -375,10 +396,7 @@ export function MessagesChat() {
       <section className="msg-panel">
         <header className="msg-panel-head">
           <div>
-            <h3>
-              {active.kind === 'ai' ? '✦ ' : ''}
-              {active.title}
-            </h3>
+            <h3>{active.title}</h3>
             <p>{active.subtitle}</p>
           </div>
           {active.kind !== 'ai' ? (
@@ -453,9 +471,9 @@ export function AiFloatingWidget() {
       {open ? (
         <div className="ai-float-panel">
           <div className="ai-float-bar">
-            <strong>✦ AI Assistant</strong>
+            <strong>AI Assistant</strong>
             <button type="button" onClick={() => setOpen(false)} aria-label="Close AI">
-              ✕
+              Close
             </button>
           </div>
           <div className="ai-float-body">
@@ -464,7 +482,7 @@ export function AiFloatingWidget() {
         </div>
       ) : null}
       <button type="button" className="ai-float-btn" onClick={() => setOpen((v) => !v)}>
-        {open ? 'Close' : '✦ AI Chat'}
+        {open ? 'Close' : 'AI Chat'}
       </button>
     </div>
   )

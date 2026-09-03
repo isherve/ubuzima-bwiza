@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { EmptyState, StatusBadge } from '../components/dashboard/Shell'
@@ -49,10 +49,10 @@ export function PaymentsPage() {
             <div className={`table-row${focusId === apt.id ? ' highlight-row' : ''}`} key={apt.id}>
               <div>
                 <strong>
-                  {apt.doctorName} · {formatRwf(apt.amount)}
+                  {apt.doctorName} | {formatRwf(apt.amount)}
                 </strong>
                 <p>
-                  {apt.date} at {apt.time} · {apt.specialty}
+                  {apt.date} at {apt.time} | {apt.specialty}
                 </p>
               </div>
               <div className="row-actions">
@@ -75,10 +75,10 @@ export function PaymentsPage() {
             <div className="table-row" key={apt.id}>
               <div>
                 <strong>
-                  {apt.receiptId} · {formatRwf(apt.amount)}
+                  {apt.receiptId} | {formatRwf(apt.amount)}
                 </strong>
                 <p>
-                  {apt.doctorName} · {methodLabel(apt.paymentMethod)}
+                  {apt.doctorName} | {methodLabel(apt.paymentMethod)}
                 </p>
               </div>
               <div className="row-actions">
@@ -122,7 +122,7 @@ export function PayAppointmentPage() {
       <div className="stack">
         <h2>Already paid</h2>
         <p className="lead">
-          Receipt {apt.receiptId} · {formatRwf(apt.amount)}
+          Receipt {apt.receiptId} | {formatRwf(apt.amount)}
         </p>
         <div className="row-actions">
           <button
@@ -170,7 +170,7 @@ export function PayAppointmentPage() {
     <div className="stack" style={{ maxWidth: 560 }}>
       <h2>Pay consultation</h2>
       <p className="lead">
-        {apt.doctorName} · {apt.date} {apt.time} · <strong>{formatRwf(apt.amount)}</strong>
+        {apt.doctorName} | {apt.date} {apt.time} | <strong>{formatRwf(apt.amount)}</strong>
       </p>
 
       <form className="search-card auth-form" onSubmit={onSubmit}>
@@ -209,7 +209,7 @@ export function PayAppointmentPage() {
             </div>
             <div className="field">
               <label htmlFor="exp">Expiry / CVC</label>
-              <input id="exp" placeholder="12/28 · 123" required />
+              <input id="exp" placeholder="12/28 | 123" required />
             </div>
           </>
         ) : null}
@@ -217,7 +217,7 @@ export function PayAppointmentPage() {
         {method === 'cash' ? (
           <p className="lead">
             Choose cash if you will pay at the hospital desk. Your appointment stays marked unpaid
-            until reception confirms — for this demo, confirming marks it paid.
+            until reception confirms. For this demo, confirming marks it paid.
           </p>
         ) : null}
 

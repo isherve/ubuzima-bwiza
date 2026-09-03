@@ -7,6 +7,8 @@ import { RegisterPage } from './pages/RegisterPage'
 import { BookAppointmentPage, DoctorProfilePage, DoctorsPage } from './pages/DoctorsPage'
 import { HomePage } from './pages/HomePage'
 import { AboutPage, ContactPage, LegalPage } from './pages/marketing/StaticPages'
+import { HelpPage } from './pages/HelpPage'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { PublicAiPage } from './pages/PublicAiPage'
 import {
   ChronicCareApplyPage,
@@ -46,7 +48,9 @@ function MarketingLayout() {
   return (
     <div>
       <Navbar />
-      <Outlet />
+      <main id="main-content">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   )
@@ -66,6 +70,7 @@ export default function App() {
         <Route path="terms-of-service" element={<LegalPage kind="terms" />} />
         <Route path="patient/chronic-care" element={<ChronicCarePage />} />
         <Route path="ai-assistant" element={<PublicAiPage />} />
+        <Route path="help" element={<HelpPage />} />
       </Route>
 
       <Route path="login" element={<LoginPage />} />
@@ -128,7 +133,7 @@ export default function App() {
         </Route>
       </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }

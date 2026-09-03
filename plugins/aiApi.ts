@@ -12,9 +12,16 @@ function readBody(req: IncomingMessage): Promise<string> {
 }
 
 function sendJson(res: ServerResponse, status: number, data: unknown) {
+  if (res.headersSent) return
   res.statusCode = status
   res.setHeader('Content-Type', 'application/json')
   res.end(JSON.stringify(data))
+}
+
+function isAiChatPath(req: IncomingMessage) {
+  const raw = (req as IncomingMessage & { originalUrl?: string }).originalUrl || req.url || ''
+  const path = raw.split('?')[0]?.replace(/\/$/, '') || ''
+  return path === '/api/ai/chat' || path.endsWith('/api/ai/chat')
 }
 
 async function handleAiRequest(req: IncomingMessage, res: ServerResponse) {
@@ -35,23 +42,36 @@ async function handleAiRequest(req: IncomingMessage, res: ServerResponse) {
     const messages = Array.isArray(body.messages) ? body.messages.slice(-12) : []
     const result = await handleAiChat(messages)
     sendJson(res, 200, result)
-  } catch {
-    sendJson(res, 400, { error: 'Invalid request body' })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Invalid request body'
+    sendJson(res, 500, { error: message })
   }
+}
+
+function attachAiApi(middlewares: { use: (fn: (req: IncomingMessage, res: ServerResponse, next: () => void) => void) => void }) {
+  middlewares.use((req, res, next) => {
+    if (!isAiChatPath(req)) {
+      next()
+      return
+    }
+    void handleAiRequest(req, res).catch((error) => {
+      sendJson(res, 500, { error: error instanceof Error ? error.message : 'AI service error' })
+    })
+  })
 }
 
 export function aiApiPlugin(): Plugin {
   return {
     name: 'ubuzima-bwiza-ai-api',
     configureServer(server) {
-      server.middlewares.use('/api/ai/chat', (req, res) => {
-        void handleAiRequest(req, res)
-      })
+      return () => {
+        attachAiApi(server.middlewares)
+      }
     },
     configurePreviewServer(server) {
-      server.middlewares.use('/api/ai/chat', (req, res) => {
-        void handleAiRequest(req, res)
-      })
+      return () => {
+        attachAiApi(server.middlewares)
+      }
     },
   }
 }

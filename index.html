@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
@@ -7,8 +7,15 @@
     <meta name="theme-color" content="#10b981" />
     <meta
       name="description"
-      content="Ubuzima Bwiza — book appointments with trusted doctors, manage health records, and access quality healthcare across Rwanda."
+      content="Ubuzima Bwiza: book appointments with trusted doctors, manage health records, and access quality healthcare across Rwanda."
     />
+    <meta property="og:title" content="Ubuzima Bwiza — Digital health for Rwanda" />
+    <meta
+      property="og:description"
+      content="Find specialists, book in-person or video visits, pay with mobile money, and get AI-assisted triage in English, Kinyarwanda, and French."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,6 +23,14 @@
       rel="stylesheet"
     />
     <title>Ubuzima Bwiza - Book Appointments with Trusted Doctors Online</title>
+    <script>
+      ;(() => {
+        const stored = localStorage.getItem('ub_theme')
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const dark = stored === 'dark' || (stored !== 'light' && prefersDark)
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,4 +1,4 @@
-import { EmptyState, StatGrid, StatusBadge } from '../../components/dashboard/Shell'
+﻿import { EmptyState, StatGrid, StatusBadge } from '../../components/dashboard/Shell'
 import { useAuth } from '../../context/AuthContext'
 import { doctors } from '../../data'
 
@@ -38,8 +38,8 @@ export function DoctorAppointmentsPage() {
               <div>
                 <strong>{apt.patientName}</strong>
                 <p>
-                  {apt.date} at {apt.time} · {apt.type}
-                  {apt.notes ? ` · ${apt.notes}` : ''}
+                  {apt.date} at {apt.time} | {apt.type}
+                  {apt.notes ? ` | ${apt.notes}` : ''}
                 </p>
               </div>
               <div className="row-actions">
@@ -79,10 +79,10 @@ export function DoctorCalendarPage() {
           <div className="table-row" key={apt.id}>
             <div>
               <strong>
-                {apt.date} · {apt.time}
+                {apt.date} | {apt.time}
               </strong>
               <p>
-                {apt.patientName} · {apt.type}
+                {apt.patientName} | {apt.type}
               </p>
             </div>
             <StatusBadge status={apt.status} />
@@ -119,7 +119,7 @@ export function DoctorAvailabilityPage() {
     <div className="stack">
       <h2>Availability</h2>
       <div className="features">
-        {['Mon–Fri 09:00–16:30', 'Sat 09:00–12:00', 'Teleconsult slots daily', 'Emergency callback on-call'].map(
+        {['Mon to Fri 09:00 to 16:30', 'Sat 09:00 to 12:00', 'Teleconsult slots daily', 'Emergency callback on-call'].map(
           (slot) => (
             <article className="feature" key={slot}>
               <h3>{slot}</h3>
@@ -143,7 +143,7 @@ export function DoctorProfilePageDash() {
           <strong>{doctor.name}</strong>
         </p>
         <p>
-          {doctor.specialty} · {doctor.hospital}
+          {doctor.specialty} | {doctor.hospital}
         </p>
         <p>{doctor.bio}</p>
         <p>Fee: {doctor.fee.toLocaleString()} RWF</p>

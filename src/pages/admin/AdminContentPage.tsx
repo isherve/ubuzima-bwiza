@@ -50,7 +50,7 @@ export function AdminContentPage() {
         <div className="success cms-notice">
           {t('common.saved')}
           <button type="button" className="cms-notice-close" onClick={clearSavedNotice}>
-            ×
+            Close
           </button>
         </div>
       )}

@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -48,6 +49,10 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const [savedNotice, setSavedNotice] = useState(false)
 
   const locale = (i18n.language === 'rw' || i18n.language === 'fr' ? i18n.language : 'en') as AppLocale
+
+  useEffect(() => {
+    document.documentElement.lang = locale === 'rw' ? 'rw' : locale
+  }, [locale])
 
   const setLocale = useCallback((next: AppLocale) => {
     setAppLocale(next)

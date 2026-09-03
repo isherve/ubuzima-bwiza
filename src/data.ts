@@ -1,4 +1,4 @@
-export type Role = 'patient' | 'doctor' | 'hospital' | 'admin'
+﻿export type Role = 'patient' | 'doctor' | 'hospital' | 'admin'
 
 export type User = {
   id: string
@@ -225,7 +225,7 @@ export const medications = [
 export const records = [
   { id: 'r1', title: 'Blood pressure check', date: '2026-07-10', doctor: 'Dr. Jean Mugabo' },
   { id: 'r2', title: 'Pediatric consultation', date: '2026-06-22', doctor: 'Dr. Marie Uwase' },
-  { id: 'r3', title: 'Lab results — lipid panel', date: '2026-06-02', doctor: 'CHUK Lab' },
+  { id: 'r3', title: 'Lab results, lipid panel', date: '2026-06-02', doctor: 'CHUK Lab' },
 ]
 
 export const messages = [
