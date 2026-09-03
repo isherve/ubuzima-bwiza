@@ -39,6 +39,7 @@ import {
   ManageUsersPage,
   SettingsPage,
 } from './pages/hospital/OpsPages'
+import { AdminContentPage } from './pages/admin/AdminContentPage'
 import { PayAppointmentPage, PaymentsPage } from './pages/PaymentsPage'
 
 function MarketingLayout() {
@@ -61,24 +62,8 @@ export default function App() {
         <Route path="book/:id" element={<BookAppointmentPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
-        <Route
-          path="privacy-policy"
-          element={
-            <LegalPage
-              title="Privacy Policy"
-              body="We protect patient data with encryption and role-based access across Ubuzima Bwiza."
-            />
-          }
-        />
-        <Route
-          path="terms-of-service"
-          element={
-            <LegalPage
-              title="Terms of Service"
-              body="By using Ubuzima Bwiza you agree to responsible use of telemedicine and appointment services."
-            />
-          }
-        />
+        <Route path="privacy-policy" element={<LegalPage kind="privacy" />} />
+        <Route path="terms-of-service" element={<LegalPage kind="terms" />} />
         <Route path="patient/chronic-care" element={<ChronicCarePage />} />
         <Route path="ai-assistant" element={<PublicAiPage />} />
       </Route>
@@ -89,7 +74,7 @@ export default function App() {
       <Route path="forgot-password" element={<ForgotPasswordPage />} />
 
       <Route element={<RequireAuth roles={['patient']} />}>
-        <Route element={<DashboardShell title="Patient workspace" />}>
+        <Route element={<DashboardShell titleKey="workspace.patient" />}>
           <Route path="my-appointments" element={<PatientAppointmentsPage />} />
           <Route path="payments" element={<PaymentsPage />} />
           <Route path="pay/:id" element={<PayAppointmentPage />} />
@@ -104,7 +89,7 @@ export default function App() {
       </Route>
 
       <Route element={<RequireAuth roles={['doctor']} />}>
-        <Route element={<DashboardShell title="Doctor workspace" />}>
+        <Route element={<DashboardShell titleKey="workspace.doctor" />}>
           <Route path="doctor-dashboard" element={<DoctorDashboardPage />} />
           <Route path="doctor-appointments" element={<DoctorAppointmentsPage />} />
           <Route path="doctor-calendar" element={<DoctorCalendarPage />} />
@@ -118,7 +103,7 @@ export default function App() {
       </Route>
 
       <Route element={<RequireAuth roles={['hospital']} />}>
-        <Route element={<DashboardShell title="Hospital workspace" />}>
+        <Route element={<DashboardShell titleKey="workspace.hospital" />}>
           <Route path="hospital-dashboard" element={<HospitalDashboardPage />} />
           <Route path="hospital-dashboard/doctors" element={<HospitalDoctorsPage />} />
           <Route path="hospital-dashboard/patients" element={<HospitalPatientsPage />} />
@@ -130,11 +115,12 @@ export default function App() {
       </Route>
 
       <Route element={<RequireAuth roles={['admin']} />}>
-        <Route element={<DashboardShell title="Admin workspace" />}>
+        <Route element={<DashboardShell titleKey="workspace.admin" />}>
           <Route path="admin-dashboard" element={<AdminDashboardPage />} />
           <Route path="manage-users" element={<ManageUsersPage />} />
-          <Route path="doctor-approvals" element={<ApprovalsPage title="Doctor approvals" />} />
-          <Route path="hospital-approvals" element={<ApprovalsPage title="Hospital approvals" />} />
+          <Route path="admin-content" element={<AdminContentPage />} />
+          <Route path="doctor-approvals" element={<ApprovalsPage titleKey="admin.doctorApprovals" />} />
+          <Route path="hospital-approvals" element={<ApprovalsPage titleKey="admin.hospitalApprovals" />} />
           <Route path="all-appointments" element={<AllAppointmentsPage />} />
           <Route path="payment-approvals" element={<HospitalReportsPage />} />
           <Route path="announcements" element={<AnnouncementsPage />} />

@@ -1,10 +1,33 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { translateSpecialty, useAppText } from '../context/ContentContext'
 import { doctors, specialties } from '../data'
+
+const FEATURE_KEYS = [
+  ['home.feature1Title', 'home.feature1Body'],
+  ['home.feature2Title', 'home.feature2Body'],
+  ['home.feature3Title', 'home.feature3Body'],
+  ['home.feature4Title', 'home.feature4Body'],
+] as const
+
+const STORY_KEYS = [
+  ['home.story1Quote', 'home.story1Name', 'home.story1Role'],
+  ['home.story2Quote', 'home.story2Name', 'home.story2Role'],
+  ['home.story3Quote', 'home.story3Name', 'home.story3Role'],
+] as const
+
+const CHRONIC_TAGS = ['home.chronicTag1', 'home.chronicTag2', 'home.chronicTag3', 'home.chronicTag4'] as const
+const CHRONIC_BULLETS = [
+  'home.chronicBullet1',
+  'home.chronicBullet2',
+  'home.chronicBullet3',
+  'home.chronicBullet4',
+] as const
 
 export function HomePage() {
   const navigate = useNavigate()
+  const { text, t } = useAppText()
   const [specialty, setSpecialty] = useState('')
   const [careType, setCareType] = useState('')
   const [query, setQuery] = useState('')
@@ -23,64 +46,46 @@ export function HomePage() {
       <section className="home-hero">
         <div className="container home-hero-grid">
           <div>
-            <span className="pill">Trusted digital care</span>
-            <h1>Book appointments with trusted doctors and hospitals</h1>
-            <p>
-              Find the right specialist, compare options and schedule your visit in just a few
-              clicks – wherever you are in Rwanda.
-            </p>
+            <span className="pill">{text('home.pill')}</span>
+            <h1>{text('home.title')}</h1>
+            <p>{text('home.subtitle')}</p>
 
             <form className="search-card" id="find" onSubmit={onSearch}>
               <div className="search-grid">
                 <div className="search-field">
-                  <label htmlFor="specialty">
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
-                      <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                    </svg>
-                    Speciality
-                  </label>
+                  <label htmlFor="specialty">{text('home.specialty')}</label>
                   <select
                     id="specialty"
                     value={specialty}
                     onChange={(e) => setSpecialty(e.target.value)}
                   >
-                    <option value="">Select a speciality (e.g. cardiology, pediatrics...)</option>
+                    <option value="">{text('home.specialtyPlaceholder')}</option>
                     {specialties.map((item) => (
                       <option key={item} value={item}>
-                        {item}
+                        {translateSpecialty(item, t)}
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div className="search-field">
-                  <label htmlFor="careType">
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
-                      <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4z" />
-                    </svg>
-                    Care type
-                  </label>
+                  <label htmlFor="careType">{text('home.careType')}</label>
                   <select
                     id="careType"
                     value={careType}
                     onChange={(e) => setCareType(e.target.value)}
                   >
-                    <option value="">Choose Our doctors or hospital</option>
-                    <option value="private">Our doctors</option>
-                    <option value="hospital">Hospital</option>
+                    <option value="">{text('home.careTypePlaceholder')}</option>
+                    <option value="private">{text('home.carePrivate')}</option>
+                    <option value="hospital">{text('home.careHospital')}</option>
                   </select>
                 </div>
 
                 <div className="search-field">
-                  <label htmlFor="query">
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
-                      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                    </svg>
-                    Doctor or hospital
-                  </label>
+                  <label htmlFor="query">{text('home.search')}</label>
                   <input
                     id="query"
-                    placeholder="Search by doctor or hospital name"
+                    placeholder={text('home.searchPlaceholder')}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                   />
@@ -89,7 +94,7 @@ export function HomePage() {
 
               <div style={{ marginTop: '1rem' }}>
                 <button className="btn btn-primary btn-full" type="submit">
-                  Find a doctor
+                  {text('home.findDoctor')}
                 </button>
               </div>
             </form>
@@ -97,52 +102,44 @@ export function HomePage() {
             <div className="stats">
               <div className="stat">
                 <strong>25K+</strong>
-                <span>Happy patients</span>
+                <span>{text('home.statPatients')}</span>
               </div>
               <div className="stat">
                 <strong>100+</strong>
-                <span>Top-rated doctors</span>
+                <span>{text('home.statDoctors')}</span>
               </div>
               <div className="stat">
                 <strong>24/7</strong>
-                <span>Digital access</span>
+                <span>{text('home.statAccess')}</span>
               </div>
             </div>
           </div>
 
           <div className="hero-visual">
-            <img src="/assets/header.png" alt="Ubuzima Bwiza care" />
+            <img src="/assets/header.png" alt={text('common.brand')} />
           </div>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <h2>Healthcare Connected For Every Profession.</h2>
-          <p className="lead">
-            Whether you&apos;re a doctor, a constructor, a farmer, or an artist, Ubuzima Bwiza
-            Connect brings world-class medical consultation to your fingertips.
-          </p>
+          <h2>{text('home.featuresTitle')}</h2>
+          <p className="lead">{text('home.featuresLead')}</p>
           <div className="features">
-            {[
-              ['Verified Specialists', 'Credential-checked clinicians across major specialties.'],
-              ['24/7 Digital Access', 'Chat, video visits, and emergency routing around the clock.'],
-              ['Secure Health Vault', 'Encrypted history, prescriptions, and follow-ups in one place.'],
-              ['AI-Powered Triage', 'Clear next steps before you meet a clinician.'],
-            ].map(([title, body]) => (
-              <article className="feature" key={title}>
-                <h3>{title}</h3>
-                <p>{body}</p>
+            {FEATURE_KEYS.map(([titleKey, bodyKey]) => (
+              <article className="feature" key={titleKey}>
+                <h3>{text(titleKey)}</h3>
+                <p>{text(bodyKey)}</p>
               </article>
             ))}
           </div>
           <div className="ai-home-cta">
             <div>
-              <h3>Try the AI Health Assistant</h3>
-              <p>Describe symptoms in English or Kinyarwanda and get triage tips plus specialist booking suggestions.</p>
+              <h3>{text('home.aiCtaTitle')}</h3>
+              <p>{text('home.aiCtaBody')}</p>
             </div>
             <Link to="/ai-assistant" className="btn btn-primary">
-              Open AI assistant
+              {text('home.openAi')}
             </Link>
           </div>
         </div>
@@ -150,11 +147,8 @@ export function HomePage() {
 
       <section className="section" id="specialists">
         <div className="container">
-          <h2>Medical specialists you can trust</h2>
-          <p className="lead">
-            For every family member — our team of highly qualified and experienced doctors are
-            committed to providing the best healthcare services.
-          </p>
+          <h2>{text('home.specialistsTitle')}</h2>
+          <p className="lead">{text('home.specialistsLead')}</p>
           <div className="doctors">
             {doctors.slice(0, 4).map((doctor) => (
               <article className="doctor-card" key={doctor.id}>
@@ -163,16 +157,16 @@ export function HomePage() {
                   <div>
                     <h3>{doctor.name}</h3>
                     <p className="meta">
-                      {doctor.specialty} · {doctor.hospital}
+                      {translateSpecialty(doctor.specialty, t)} · {doctor.hospital}
                     </p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <Link to={`/book/${doctor.id}`} className="btn btn-primary">
-                    Book
+                    {t('common.book')}
                   </Link>
                   <Link to={`/doctors/${doctor.id}`} className="btn btn-outline">
-                    Profile
+                    {t('common.profile')}
                   </Link>
                 </div>
               </article>
@@ -186,25 +180,21 @@ export function HomePage() {
           <div className="care-panel">
             <img src="/assets/about.png" alt="" />
             <div className="care-copy">
-              <p className="eyebrow">Continuous Care Program</p>
-              <h2>Do you have a chronic disease?</h2>
-              <p>
-                Connect with a dedicated doctor for continuous care and support diabetes,
-                hypertension, asthma, heart disease and more.
-              </p>
+              <p className="eyebrow">{text('home.chronicEyebrow')}</p>
+              <h2>{text('home.chronicTitle')}</h2>
+              <p>{text('home.chronicBody')}</p>
               <ul>
-                <li>Assigned dedicated specialist</li>
-                <li>Continuous chat &amp; video calls</li>
-                <li>Personalized care plans</li>
-                <li>Health tracking &amp; monitoring</li>
+                {CHRONIC_BULLETS.map((key) => (
+                  <li key={key}>{text(key)}</li>
+                ))}
               </ul>
               <div className="tags">
-                {['Diabetes', 'Hypertension', 'Asthma', 'Heart Disease'].map((tag) => (
-                  <span key={tag}>{tag}</span>
+                {CHRONIC_TAGS.map((key) => (
+                  <span key={key}>{text(key)}</span>
                 ))}
               </div>
               <Link to="/register" className="btn btn-primary">
-                Join Now
+                {text('home.joinNow')}
               </Link>
             </div>
           </div>
@@ -213,35 +203,16 @@ export function HomePage() {
 
       <section className="section">
         <div className="container">
-          <h2>What families are saying</h2>
-          <p className="lead">
-            Real stories from patients who use Ubuzima Bwiza to get trusted care faster.
-          </p>
+          <h2>{text('home.storiesTitle')}</h2>
+          <p className="lead">{text('home.storiesLead')}</p>
           <div className="stories">
-            <article className="story">
-              <blockquote>
-                “Nabonye umuganga byihuse kandi byoroshye. Uko bampaye ubufasha kuri chat no gufata
-                gahunda byatumye numva ntekanye.”
-              </blockquote>
-              <strong>Mukamana Aline</strong>
-              <span>Patient · Kigali</span>
-            </article>
-            <article className="story">
-              <blockquote>
-                “Teleconsultation saved us hours of travel when my son had a fever. Care reached our
-                home within hours.”
-              </blockquote>
-              <strong>Claudine Niyonzima</strong>
-              <span>Mother of two</span>
-            </article>
-            <article className="story">
-              <blockquote>
-                “I booked a specialist without leaving my district. Continuous care for hypertension
-                finally feels simple.”
-              </blockquote>
-              <strong>Patrick Habimana</strong>
-              <span>Farmer · Musanze</span>
-            </article>
+            {STORY_KEYS.map(([quoteKey, nameKey, roleKey]) => (
+              <article className="story" key={quoteKey}>
+                <blockquote>{text(quoteKey)}</blockquote>
+                <strong>{text(nameKey)}</strong>
+                <span>{text(roleKey)}</span>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -249,17 +220,14 @@ export function HomePage() {
       <section className="section">
         <div className="container">
           <div className="cta">
-            <h2>Join Rwanda&apos;s Most Trusted Medical Network</h2>
-            <p>
-              Create a free account today to access telemedicine, track your medical history, and
-              book appointments with top-tier Rwandan specialists.
-            </p>
+            <h2>{text('home.ctaTitle')}</h2>
+            <p>{text('home.ctaBody')}</p>
             <div className="cta-actions">
-              <Link to="/register" className="btn" style={{ background: '#fff', color: '#059669', padding: '0.9rem 1.5rem' }}>
-                Get Started Now
+              <Link to="/register" className="btn btn-cta-light">
+                {text('home.ctaPrimary')}
               </Link>
-              <a href="/#find" className="btn btn-outline" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.4)' }}>
-                Contact Us
+              <a href="/#find" className="btn btn-outline btn-cta-outline">
+                {text('home.ctaSecondary')}
               </a>
             </div>
           </div>
