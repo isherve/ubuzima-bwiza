@@ -26,9 +26,18 @@ export async function askHealthAi(messages: AiChatMessage[]): Promise<AiChatResp
     body: JSON.stringify({ messages }),
   })
 
+  const raw = await response.text()
   if (!response.ok) {
-    throw new Error('AI service failed. Please try again.')
+    throw new Error(
+      response.status === 404
+        ? 'AI API is not running. Restart the app with npm run dev and try again.'
+        : 'AI service failed. Please try again.',
+    )
   }
 
-  return (await response.json()) as AiChatResponse
+  try {
+    return JSON.parse(raw) as AiChatResponse
+  } catch {
+    throw new Error('AI API is not running. Restart the app with npm run dev and try again.')
+  }
 }

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAppText } from '../../context/ContentContext'
+import { useToast } from '../../context/ToastContext'
 
 const ABOUT_FEATURES = [
   ['home.feature1Title', 'home.feature1Body'],
@@ -37,6 +38,7 @@ export function AboutPage() {
 
 export function ContactPage() {
   const { text } = useAppText()
+  const { notify } = useToast()
 
   return (
     <section className="section">
@@ -49,7 +51,7 @@ export function ContactPage() {
             className="search-card"
             onSubmit={(e) => {
               e.preventDefault()
-              alert(text('contact.sentDemo'))
+              notify(text('contact.sentDemo'))
             }}
           >
             <div className="field">

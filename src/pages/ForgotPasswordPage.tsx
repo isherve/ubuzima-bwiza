@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { ThemeToggle } from '../components/ThemeToggle'
+import { LanguageSwitcher } from '../components/LanguageSwitcher'
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -13,6 +15,10 @@ export function ForgotPasswordPage() {
 
   return (
     <div className="auth-page">
+      <div className="auth-toolbar">
+        <LanguageSwitcher compact />
+        <ThemeToggle compact />
+      </div>
       <div className="auth-bg" aria-hidden>
         <img src="/assets/about.png" alt="" />
       </div>

@@ -1,6 +1,7 @@
-import { useTranslation } from 'react-i18next'
+﻿import { useTranslation } from 'react-i18next'
 import { StatGrid, StatusBadge } from '../../components/dashboard/Shell'
 import { LanguageSwitcher } from '../../components/LanguageSwitcher'
+import { ThemeToggle } from '../../components/ThemeToggle'
 import { useAuth } from '../../context/AuthContext'
 import { useAppText } from '../../context/ContentContext'
 import { demoUsers, doctors } from '../../data'
@@ -39,7 +40,7 @@ export function HospitalDoctorsPage() {
             <div>
               <strong>{doc.name}</strong>
               <p>
-                {doc.specialty} · {doc.hospital}
+                {doc.specialty} | {doc.hospital}
               </p>
             </div>
             <span className="meta">{doc.available ? 'Available' : 'Busy'}</span>
@@ -79,10 +80,10 @@ export function HospitalAppointmentsPage() {
           <div className="table-row" key={apt.id}>
             <div>
               <strong>
-                {apt.patientName} → {apt.doctorName}
+                {apt.patientName} with {apt.doctorName}
               </strong>
               <p>
-                {apt.date} {apt.time} · {apt.type}
+                {apt.date} {apt.time} | {apt.type}
               </p>
             </div>
             <StatusBadge status={apt.status} />
@@ -106,7 +107,7 @@ export function HospitalReportsPage() {
   const downloadPdf = () =>
     downloadPrintableReport({
       title: 'Operations report',
-      subtitle: `${user?.hospital ?? user?.name ?? 'Workspace'} · Ubuzima Bwiza`,
+      subtitle: `${user?.hospital ?? user?.name ?? 'Workspace'} | Ubuzima Bwiza`,
       htmlBody: `
         <p class="meta"><strong>Total appointments:</strong> ${appointments.length}</p>
         <p class="meta"><strong>Paid revenue:</strong> ${formatRwf(paidTotal)}</p>
@@ -150,7 +151,7 @@ export function HospitalReportsPage() {
                 100,
             )}% video consultations`,
           ],
-          ['Collections', `${formatRwf(paidTotal)} received · ${unpaidCount} unpaid`],
+          ['Collections', `${formatRwf(paidTotal)} received | ${unpaidCount} unpaid`],
         ].map(([title, body]) => (
           <article className="feature" key={title}>
             <h3>{title}</h3>
@@ -167,6 +168,7 @@ export function HospitalSettingsPage() {
     <div className="stack">
       <h2>Hospital settings</h2>
       <div className="feature">
+        <ThemeToggle />
         <p>
           <strong>Facility:</strong> CHUK
         </p>
@@ -211,7 +213,7 @@ export function ManageUsersPage() {
             <div>
               <strong>{u.name}</strong>
               <p>
-                {u.email} · {u.role}
+                {u.email} | {u.role}
               </p>
             </div>
           </div>
@@ -294,6 +296,7 @@ export function SettingsPage() {
     <div className="stack">
       <h2>{t('admin.settings')}</h2>
       <div className="feature">
+        <ThemeToggle />
         <LanguageSwitcher />
         <p>{t('admin.themeNote')}</p>
         <p>{t('admin.securityNote')}</p>

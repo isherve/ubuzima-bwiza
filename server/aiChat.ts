@@ -1,4 +1,4 @@
-import { doctors, type AiDoctor } from './doctors.js'
+﻿import { doctors, type AiDoctor } from './doctors.js'
 
 export type ChatMessage = { role: 'user' | 'assistant' | 'system'; content: string }
 
@@ -61,7 +61,7 @@ export function localAssistantReply(messages: ChatMessage[]): AiChatResult {
   if (isEmergency(lastUser)) {
     return {
       reply:
-        'This may be urgent. Seek emergency care now — call emergency services or go to the nearest hospital. Do not wait for an online consultation. After you are safe, you can use Ubuzima Bwiza for follow-up with a specialist.\n\nDisclaimer: This is preliminary guidance only, not a medical diagnosis.',
+        'This may be urgent. Seek emergency care now, call emergency services or go to the nearest hospital. Do not wait for an online consultation. After you are safe, you can use Ubuzima Bwiza for follow-up with a specialist.\n\nDisclaimer: This is preliminary guidance only, not a medical diagnosis.',
       mode: 'local',
       specialty: 'General practitioner',
       doctors: doctors.filter((d) => d.specialty === 'General practitioner').slice(0, 2),
@@ -77,10 +77,10 @@ export function localAssistantReply(messages: ChatMessage[]): AiChatResult {
         ? 'Keep the child hydrated, monitor fever, and seek care promptly if they become unusually sleepy or refuse fluids.'
         : specialty === 'Dental'
           ? 'Rinse gently with clean salt water and avoid very hot/cold drinks until you see a dentist.'
-          : 'Rest, drink fluids, track symptoms for 24–48 hours, and book a clinician if they worsen or persist.'
+          : 'Rest, drink fluids, track symptoms for 24 to 48 hours, and book a clinician if they worsen or persist.'
 
   return {
-    reply: `Thanks for sharing that. Based on what you described, a **${specialty}** consult on Ubuzima Bwiza is a sensible next step.\n\n${tips}\n\nI can help you prepare questions for your visit (onset, severity, medications, allergies). If symptoms suddenly worsen, seek urgent care.\n\nDisclaimer: This is preliminary AI guidance only — not a diagnosis or prescription.`,
+    reply: `Thanks for sharing that. Based on what you described, a **${specialty}** consult on Ubuzima Bwiza is a sensible next step.\n\n${tips}\n\nI can help you prepare questions for your visit (onset, severity, medications, allergies). If symptoms suddenly worsen, seek urgent care.\n\nDisclaimer: This is preliminary AI guidance only, not a diagnosis or prescription.`,
     mode: 'local',
     specialty,
     doctors: matches,
@@ -101,6 +101,20 @@ function cleanApiKey(value?: string) {
     return ''
   }
   return key
+}
+
+function extractReply(data: {
+  choices?: Array<{ message?: { content?: string | Array<{ type?: string; text?: string }>; reasoning?: string } }>
+}) {
+  const message = data.choices?.[0]?.message
+  const content = message?.content
+  if (typeof content === 'string' && content.trim()) return content.trim()
+  if (Array.isArray(content)) {
+    const text = content.map((part) => (typeof part === 'string' ? part : part.text || '')).join('').trim()
+    if (text) return text
+  }
+  const reasoning = message?.reasoning?.trim()
+  return reasoning || ''
 }
 
 async function llmReply(messages: ChatMessage[]): Promise<AiChatResult | null> {
@@ -127,6 +141,7 @@ async function llmReply(messages: ChatMessage[]): Promise<AiChatResult | null> {
       temperature: 0.4,
       messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.filter((m) => m.role !== 'system')],
     }),
+    signal: AbortSignal.timeout(20000),
   })
 
   if (!response.ok) {
@@ -139,9 +154,9 @@ async function llmReply(messages: ChatMessage[]): Promise<AiChatResult | null> {
   }
 
   const data = (await response.json()) as {
-    choices?: Array<{ message?: { content?: string } }>
+    choices?: Array<{ message?: { content?: string | Array<{ type?: string; text?: string }>; reasoning?: string } }>
   }
-  const reply = data.choices?.[0]?.message?.content?.trim()
+  const reply = extractReply(data)
   if (!reply) throw new Error('Empty AI response')
 
   const lastMessage = messages[messages.length - 1]

@@ -1,5 +1,7 @@
 import { Link, NavLink, Navigate, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { LanguageSwitcher } from '../LanguageSwitcher'
+import { ThemeToggle } from '../ThemeToggle'
 import { dashboardPath, useAuth } from '../../context/AuthContext'
 import type { Role } from '../../data'
 
@@ -99,12 +101,16 @@ export function DashboardShell({ titleKey }: { titleKey: string }) {
             <p className="eyebrow">{t('common.brand')}</p>
             <h1>{t(titleKey)}</h1>
           </div>
-          <div className="dash-user">
-            <strong>{user.name}</strong>
-            <span>{user.email}</span>
+          <div className="dash-top-actions">
+            <LanguageSwitcher compact />
+            <ThemeToggle compact />
+            <div className="dash-user">
+              <strong>{user.name}</strong>
+              <span>{user.email}</span>
+            </div>
           </div>
         </header>
-        <div className="dash-content">
+        <div className="dash-content" id="main-content">
           <Outlet />
         </div>
       </div>

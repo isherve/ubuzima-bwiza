@@ -157,7 +157,7 @@ export function HomePage() {
                   <div>
                     <h3>{doctor.name}</h3>
                     <p className="meta">
-                      {translateSpecialty(doctor.specialty, t)} · {doctor.hospital}
+                      {translateSpecialty(doctor.specialty, t)} | {doctor.hospital}
                     </p>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-{
+﻿{
   "nav": {
     "findDoctor": "Shaka umuganga",
     "doctors": "Abaganga",
@@ -10,11 +10,23 @@
     "getStarted": "Tangira",
     "dashboard": "Ikibaho",
     "logout": "Sohoka",
-    "language": "Ururimi"
+    "language": "Ururimi",
+    "help": "Ubufasha n'ibibazo",
+    "menu": "Fungura menu",
+    "closeMenu": "Funga menu"
+  },
+  "theme": {
+    "appearance": "Isura",
+    "light": "Umucyo",
+    "dark": "Umwijima",
+    "system": "Sisitemu",
+    "switchToLight": "Hindura ku isura y'umucyo",
+    "switchToDark": "Hindura ku isura y'umwijima"
   },
   "footer": {
     "rights": "Uburenganzira bwose burabitswe",
-    "hosted": "Amakuru arindwa kandi abikwa na AOS"
+    "hosted": "Amakuru arindwa kandi abikwa na AOS",
+    "academic": "Igerageza ry'ishuri. Ntabwo ari serivisi yemewe y'ubuvuzi."
   },
   "common": {
     "book": "Fata gahunda",
@@ -36,7 +48,7 @@
   "home": {
     "pill": "Ubuvuzi bwo kuri interineti bwizewe",
     "title": "Fata gahunda n'abaganga n'ibitaro byizewe",
-    "subtitle": "Shaka umusizi ukwiye,ugereranye amahitamo maze ufate gahunda mu masegonda make — aho uri hose mu Rwanda.",
+    "subtitle": "Shaka umusizi ukwiye,ugereranye amahitamo maze ufate gahunda mu masegonda make, aho uri hose mu Rwanda.",
     "specialty": "Ubumenyi",
     "specialtyPlaceholder": "Hitamo ubumenyi (urug. imitima, abana...)",
     "careType": "Ubwoko bw'ubuvuzi",
@@ -80,13 +92,13 @@
     "storiesLead": "Inkuru z'ukuri z'abantu bakoresha Ubuzima Bwiza.",
     "story1Quote": "Nabonye umuganga byihuse kandi byoroshye. Ubufasha kuri chat no gufata gahunda byatumye numva ntekanye.",
     "story1Name": "Mukamana Aline",
-    "story1Role": "Umurwayi · Kigali",
+    "story1Role": "Umurwayi | Kigali",
     "story2Quote": "Teleconsultation yadukijije amasaha yo kugenda ubwo umwana wanjye yagiraga umuriro.",
     "story2Name": "Claudine Niyonzima",
     "story2Role": "Nyina y'abana babiri",
     "story3Quote": "Nafashe gahunda n'umusizi utavuye mu karere kanjye. Gukomeza kwita impawu z'umutima byoroshye.",
     "story3Name": "Patrick Habimana",
-    "story3Role": "Umurima · Musanze",
+    "story3Role": "Umurima | Musanze",
     "ctaTitle": "Injira mu rubuga rw'ubuvuzi rwizewe mu Rwanda",
     "ctaBody": "Fungura konti yubuntu uhabwe telemedicine, ukurikirane amateka yawe, ufate gahunda n'abaganga b'inzobere.",
     "ctaPrimary": "Tangira nonaha",
@@ -216,13 +228,13 @@
     "platformLead": "Genzura abakoresha, kwemera abaganga, amatangazo, n'ibirimo by'urubuga.",
     "manageUsers": "Cunga abakoresha",
     "pendingApp": "Dosiye itegekereje #1042",
-    "pendingMeta": "Yoherejwe iminsi 2 ishize · irindiriye isuzuma",
+    "pendingMeta": "Yoherejwe iminsi 2 ishize | irindiriye isuzuma",
     "contentTitle": "Guhindura ibirimo by'urubuga",
     "contentLead": "Hindura amakuru, amategeko, amatangazo, n'ibisobanuro by'abaganga mu ndimi eshatu.",
     "selectSection": "Igice",
     "fieldLabel": "Umurima",
     "defaultLocale": "Ururimi rw'ibanze",
-    "themeNote": "Insanganyamatsiko: Ubuzima Bwiza emerald",
+    "themeNote": "Insanganyamatsiko: umucyo, umwijima, cyangwa sisitemu hamwe n'ibara ry'Ubuzima Bwiza emerald",
     "securityNote": "Umutekano: 2FA iboneka mu bucuruzi"
   },
   "payments": {
@@ -239,7 +251,7 @@
     "subtitle": "Sobanura ibimenyetso ubone inama n'abaganga ushobora gufata.",
     "thinking": "Ntekereza…",
     "suggestedDoctors": "Abaganga basabwa",
-    "floatLabel": "✦ AI Chat",
+    "floatLabel": "AI Chat",
     "promptHeadache": "Ndashoje umutwe kandi mfite umuriro",
     "promptHeadacheRw": "Ndashoje umutwe kandi mfite umuriro",
     "promptMeds": "Mfasha kwitegura gusura umuganga"
@@ -268,5 +280,38 @@
     "Ophthalmologist": "Umuganga w'amaso",
     "Endocrinologist": "Umuganga w'im hormone",
     "Psychiatrist": "Umuganga w'ubwonko bw'imitekerereze"
+  },
+  "emergency": {
+    "label": "Ihutirwa:",
+    "body": "Iyi sisitemu ntabwo ikoreshwa mu bihe by'ihutirwa. Hamagara 112 cyangwa SAMU 912, cyangwa ujye ku bitaro bikwegereye."
+  },
+  "demo": {
+    "notice": "Igerageza ry'ishuri: kwinjira, kwishyura, n'inyandiko ni igerageza. Ntushyiremo amakuru nyayo y'umurwayi.",
+    "dismiss": "Byumvikanye"
+  },
+  "a11y": {
+    "skip": "Simbuka ujye ku birimo"
+  },
+  "notFound": {
+    "title": "Iyi paji ntiboneka",
+    "body": "Ihuza rishobora kuba ritari ryo. Subira ahabanza, twandikire, cyangwa ubaze umufasha wa AI.",
+    "home": "Subira ahabanza"
+  },
+  "help": {
+    "pill": "Ubufasha",
+    "title": "Uko Ubuzima Bwiza ikora",
+    "lead": "Ibisubizo bigufi ku barwayi, abaganga, n'abagenzura. Mu gihe cy'ihutirwa, hamagara 112 cyangwa SAMU 912.",
+    "q1": "Umufasha wa AI ni umuganga?",
+    "a1": "Oya. Atanga ubuyobozi bwa mbere n'inama z'inzobere gusa. Ntashobora gusuzuma, gutanga imiti, cyangwa gusimbura serivisi z'ihutirwa.",
+    "q2": "Nafata gute gahunda nishyure?",
+    "a2": "Shakisha umuganga, hitamo itariki n'ubwoko bw'urugendo, hanyuma wishyure na MTN MoMo, Airtel Money, ikarita, cyangwa amafaranga ku kigo. Amafaranga ni RWF.",
+    "q3": "Ni nde ururimi rukoreshwa?",
+    "a3": "Icyongereza, Ikinyarwanda, n'Igifaransa. Koresha ihitamo ry'ururimi hejuru. AI ishobora gusubiza mu rurimi wanditse.",
+    "q4": "Ninde ushobora kwinjira?",
+    "a4": "Umurwayi, umuganga, ibitaro, n'umuyobozi w'urubuga. Koresha konti z'igerageza ku paji yo kwinjira.",
+    "q5": "Nakoze iki mu gihe cy'ihutirwa?",
+    "a5": "Ntutegereze ikiganiro kuri interineti. Hamagara 112 cyangwa SAMU 912, cyangwa ujye ku bitaro bikwegereye.",
+    "q6": "Amakuru yanjye arinzwe muri iyi porogaramu?",
+    "a6": "Iki gice cy'ishuri kibika amakuru y'igerageza muri mushakisha kugira ngo ikizamini gikore ku mudasobwa. Sisitemu y'ukuri yakoresha seriveri irinzwe."
   }
 }

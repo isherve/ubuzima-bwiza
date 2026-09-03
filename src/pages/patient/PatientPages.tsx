@@ -1,9 +1,11 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { EmptyState, StatGrid, StatusBadge } from '../../components/dashboard/Shell'
 import { AiChat, MessagesChat } from '../../components/AiChat'
 import { useAuth } from '../../context/AuthContext'
+import { useToast } from '../../context/ToastContext'
 import { medications, records } from '../../data'
+import { downloadAppointmentIcs } from '../../lib/calendar'
 import { askHealthAi } from '../../lib/aiClient'
 import {
   appointmentsTableHtml,
@@ -34,7 +36,7 @@ export function PatientAppointmentsPage() {
               downloadAppointmentsCsv(mine, `ubuzima-appointments-${Date.now()}.csv`)
               downloadPrintableReport({
                 title: 'My appointments report',
-                subtitle: `${user?.name ?? 'Patient'} · Ubuzima Bwiza`,
+                subtitle: `${user?.name ?? 'Patient'} | Ubuzima Bwiza`,
                 htmlBody: appointmentsTableHtml(mine),
               })
             }}
@@ -55,7 +57,7 @@ export function PatientAppointmentsPage() {
               <div>
                 <strong>{apt.doctorName}</strong>
                 <p>
-                  {apt.specialty} · {apt.date} at {apt.time} · {apt.type} ·{' '}
+                  {apt.specialty} | {apt.date} at {apt.time} | {apt.type} |{' '}
                   {(apt.amount ?? 0).toLocaleString()} RWF
                 </p>
               </div>
@@ -71,6 +73,13 @@ export function PatientAppointmentsPage() {
                     Receipt
                   </Link>
                 )}
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => downloadAppointmentIcs(apt)}
+                >
+                  Add to calendar
+                </button>
               </div>
             </div>
           ))
@@ -111,7 +120,7 @@ export function MedicationsPage() {
       <div className="toolbar">
         <h2>Medications & prescriptions</h2>
         <button type="button" className="btn btn-outline" onClick={() => void askAboutMeds()} disabled={loading}>
-          {loading ? 'Asking AI…' : '✦ AI med tips'}
+          {loading ? 'Asking AI…' : 'AI med tips'}
         </button>
       </div>
       <div className="table">
@@ -177,6 +186,7 @@ export function ChronicCarePage() {
 }
 
 export function ChronicCareApplyPage() {
+  const { notify } = useToast()
   return (
     <div className="stack">
       <h2>Apply for continuous care</h2>
@@ -184,7 +194,7 @@ export function ChronicCareApplyPage() {
         className="search-card auth-form"
         onSubmit={(e) => {
           e.preventDefault()
-          alert('Application submitted (demo).')
+          notify('Application submitted for review (demonstration).')
         }}
       >
         <div className="field">

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ThemeToggle } from '../components/ThemeToggle'
+import { LanguageSwitcher } from '../components/LanguageSwitcher'
 import { dashboardPath, useAuth } from '../context/AuthContext'
 import type { Role } from '../data'
 
@@ -13,11 +15,20 @@ export function RegisterPage() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault()
+    if (password.length < 8) {
+      setError('Use at least 8 characters for a stronger password.')
+      return
+    }
+    if (password !== confirm) {
+      setError('Passwords do not match.')
+      return
+    }
     const result = register({ name: fullName, email, password, role })
     if (!result.ok) {
       setError(result.message)
@@ -28,6 +39,10 @@ export function RegisterPage() {
 
   return (
     <div className="auth-page">
+      <div className="auth-toolbar">
+        <LanguageSwitcher compact />
+        <ThemeToggle compact />
+      </div>
       <div className="auth-bg" aria-hidden>
         <img src="/assets/header.png" alt="" />
       </div>
@@ -79,12 +94,23 @@ export function RegisterPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={6}
+                    minLength={8}
                   />
                   <button type="button" className="password-toggle" onClick={() => setShowPassword((v) => !v)}>
                     {showPassword ? 'Hide' : 'Show'}
                   </button>
                 </div>
+              </div>
+              <div className="field">
+                <label htmlFor="confirm">Confirm password *</label>
+                <input
+                  id="confirm"
+                  type={showPassword ? 'text' : 'password'}
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  required
+                  minLength={8}
+                />
               </div>
               {error ? <p className="error">{error}</p> : null}
               <button className="login-btn" type="submit">

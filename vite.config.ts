@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), aiApiPlugin()],
     server: {
       port: 5173,
+      host: true,
     },
   }
 })

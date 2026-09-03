@@ -53,10 +53,10 @@ export function DoctorsPage() {
                   <div>
                     <h3>{doctor.name}</h3>
                     <p className="meta">
-                      {doctor.specialty} · {doctor.hospital}
+                      {doctor.specialty} | {doctor.hospital}
                     </p>
                     <p className="meta">
-                      {doctor.rating} ★ · {doctor.reviews} reviews · {doctor.fee.toLocaleString()} RWF
+                      {doctor.rating} ({doctor.reviews} reviews) | {doctor.fee.toLocaleString()} RWF
                     </p>
                     <p className="meta">{doctor.available ? 'Available today' : 'Next slots tomorrow'}</p>
                   </div>
@@ -93,13 +93,13 @@ export function DoctorProfilePage() {
           <div>
             <h1>{doctor.name}</h1>
             <p className="meta">
-              {doctor.specialty} · {doctor.hospital}
+              {doctor.specialty} | {doctor.hospital}
             </p>
           </div>
         </div>
         <p>{doctor.bio}</p>
         <p className="meta" style={{ marginTop: '0.75rem' }}>
-          Consultation fee: {doctor.fee.toLocaleString()} RWF · {doctor.rating} ★ ({doctor.reviews}{' '}
+          Consultation fee: {doctor.fee.toLocaleString()} RWF | {doctor.rating} ({doctor.reviews}{' '}
           reviews)
         </p>
         <div style={{ marginTop: '1.25rem' }}>
@@ -169,7 +169,7 @@ export function BookAppointmentPage() {
         <p className="pill">Booking</p>
         <h1>Book with {doctor.name}</h1>
         <p className="lead">
-          {doctor.specialty} · {doctor.fee.toLocaleString()} RWF
+          {doctor.specialty} | {doctor.fee.toLocaleString()} RWF
         </p>
         <form className="search-card auth-form" onSubmit={onSubmit}>
           <div className="field">
@@ -202,7 +202,7 @@ export function BookAppointmentPage() {
             <input id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Symptoms or reason" />
           </div>
           <button type="button" className="btn btn-outline" onClick={() => void askAiPrep()} disabled={aiLoading}>
-            {aiLoading ? 'AI preparing…' : '✦ AI prepare visit notes'}
+            {aiLoading ? 'AI preparing…' : 'AI prepare visit notes'}
           </button>
           {aiTip ? <p className="success">{aiTip}</p> : null}
           <button className="btn btn-primary btn-full" type="submit">

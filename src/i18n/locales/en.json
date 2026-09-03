@@ -1,4 +1,4 @@
-{
+﻿{
   "nav": {
     "findDoctor": "Find a doctor",
     "doctors": "Doctors",
@@ -10,11 +10,23 @@
     "getStarted": "Get Started",
     "dashboard": "Dashboard",
     "logout": "Logout",
-    "language": "Language"
+    "language": "Language",
+    "help": "Help & FAQ",
+    "menu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "theme": {
+    "appearance": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
   },
   "footer": {
     "rights": "All Rights Reserved",
-    "hosted": "Data protected & hosted by AOS"
+    "hosted": "Data protected & hosted by AOS",
+    "academic": "Academic demonstration prototype. Not a licensed clinical service."
   },
   "common": {
     "book": "Book",
@@ -36,7 +48,7 @@
   "home": {
     "pill": "Trusted digital care",
     "title": "Book appointments with trusted doctors and hospitals",
-    "subtitle": "Find the right specialist, compare options and schedule your visit in just a few clicks – wherever you are in Rwanda.",
+    "subtitle": "Find the right specialist, compare options and schedule your visit in just a few clicks wherever you are in Rwanda.",
     "specialty": "Speciality",
     "specialtyPlaceholder": "Select a speciality (e.g. cardiology, pediatrics...)",
     "careType": "Care type",
@@ -63,7 +75,7 @@
     "aiCtaBody": "Describe symptoms in English, Kinyarwanda, or French and get triage tips plus specialist booking suggestions.",
     "openAi": "Open AI assistant",
     "specialistsTitle": "Medical specialists you can trust",
-    "specialistsLead": "For every family member — our team of highly qualified doctors is committed to providing the best healthcare services.",
+    "specialistsLead": "For every family member, our team of highly qualified doctors is committed to providing the best healthcare services.",
     "chronicEyebrow": "Continuous Care Program",
     "chronicTitle": "Do you have a chronic disease?",
     "chronicBody": "Connect with a dedicated doctor for continuous care and support for diabetes, hypertension, asthma, heart disease and more.",
@@ -80,13 +92,13 @@
     "storiesLead": "Real stories from patients who use Ubuzima Bwiza to get trusted care faster.",
     "story1Quote": "Nabonye umuganga byihuse kandi byoroshye. Ubufasha kuri chat no gufata gahunda byatumye numva ntekanye.",
     "story1Name": "Mukamana Aline",
-    "story1Role": "Patient · Kigali",
+    "story1Role": "Patient | Kigali",
     "story2Quote": "Teleconsultation saved us hours of travel when my son had a fever. Care reached our home within hours.",
     "story2Name": "Claudine Niyonzima",
     "story2Role": "Mother of two",
     "story3Quote": "I booked a specialist without leaving my district. Continuous care for hypertension finally feels simple.",
     "story3Name": "Patrick Habimana",
-    "story3Role": "Farmer · Musanze",
+    "story3Role": "Farmer | Musanze",
     "ctaTitle": "Join Rwanda's most trusted medical network",
     "ctaBody": "Create a free account today to access telemedicine, track your medical history, and book appointments with top-tier Rwandan specialists.",
     "ctaPrimary": "Get started now",
@@ -216,13 +228,13 @@
     "platformLead": "Oversee users, provider approvals, announcements, and site content.",
     "manageUsers": "Manage users",
     "pendingApp": "Pending application #1042",
-    "pendingMeta": "Submitted 2 days ago · awaiting review",
+    "pendingMeta": "Submitted 2 days ago | awaiting review",
     "contentTitle": "Site content editor",
     "contentLead": "Edit marketing copy, legal text, announcements, and doctor bios in English, Kinyarwanda, and French.",
     "selectSection": "Section",
     "fieldLabel": "Field",
     "defaultLocale": "Default language",
-    "themeNote": "Theme: Ubuzima Bwiza emerald",
+    "themeNote": "Theme: light, dark, or system appearance with Ubuzima Bwiza emerald accents",
     "securityNote": "Security: 2FA available in production"
   },
   "payments": {
@@ -239,7 +251,7 @@
     "subtitle": "Describe symptoms and get guidance plus specialist suggestions.",
     "thinking": "Thinking…",
     "suggestedDoctors": "Suggested specialists",
-    "floatLabel": "✦ AI Chat",
+    "floatLabel": "AI Chat",
     "promptHeadache": "I have headache and fever",
     "promptHeadacheRw": "Ndashoje umutwe kandi mfite umuriro",
     "promptMeds": "Help me prepare for my doctor visit"
@@ -268,5 +280,38 @@
     "Ophthalmologist": "Ophthalmologist",
     "Endocrinologist": "Endocrinologist",
     "Psychiatrist": "Psychiatrist"
+  },
+  "emergency": {
+    "label": "Emergency:",
+    "body": "This platform is not for life-threatening emergencies. Call 112 or SAMU 912, or go to the nearest hospital."
+  },
+  "demo": {
+    "notice": "Academic demonstration: logins, payments, and records are simulated for examination. Do not enter real patient data.",
+    "dismiss": "Got it"
+  },
+  "a11y": {
+    "skip": "Skip to main content"
+  },
+  "notFound": {
+    "title": "This page is not available",
+    "body": "The link may be incorrect, or the page was moved. Return home, contact reception, or ask the AI assistant for the next step.",
+    "home": "Back to home"
+  },
+  "help": {
+    "pill": "Help centre",
+    "title": "How Ubuzima Bwiza works",
+    "lead": "Short answers for patients, clinicians, and examiners. For a medical emergency, call 112 or SAMU 912 first.",
+    "q1": "Is the AI assistant a doctor?",
+    "a1": "No. It offers preliminary guidance and specialist suggestions only. It cannot diagnose, prescribe, or replace emergency care.",
+    "q2": "How do I book and pay?",
+    "a2": "Search for a doctor, choose a date and visit type, then pay with MTN MoMo, Airtel Money, card, or cash at the facility. Amounts are in RWF.",
+    "q3": "Which languages are supported?",
+    "a3": "English, Kinyarwanda, and French. Use the language control in the header. The AI assistant can reply in the language you write.",
+    "q4": "Who can log in?",
+    "a4": "Patients, doctors, hospitals, and a platform administrator each have a dedicated workspace. Use the demo accounts on the login page for examination.",
+    "q5": "What should I do in an emergency?",
+    "a5": "Do not wait for an online chat. Call 112 or SAMU 912, or go to the nearest hospital immediately.",
+    "q6": "Is my data stored securely in this build?",
+    "a6": "This academic prototype keeps demonstration data in the browser so the viva can run offline from a laptop. A production version would use a secured server, encrypted storage, and audit logs."
   }
 }
