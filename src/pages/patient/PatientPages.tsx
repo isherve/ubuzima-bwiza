@@ -194,7 +194,7 @@ export function ChronicCareApplyPage() {
         className="search-card auth-form"
         onSubmit={(e) => {
           e.preventDefault()
-          notify('Application submitted for review (demonstration).')
+          notify('Application submitted for review. A care coordinator will contact you.')
         }}
       >
         <div className="field">

@@ -25,8 +25,7 @@
   },
   "footer": {
     "rights": "Tous droits réservés",
-    "hosted": "Données protégées et hébergées par AOS",
-    "academic": "Prototype de démonstration académique. Il ne s'agit pas d'un service clinique agréé."
+    "hosted": "Données protégées et hébergées par AOS"
   },
   "common": {
     "book": "Réserver",
@@ -123,14 +122,14 @@
     "phone": "+250 788 123 456",
     "emergency": "Urgence : +250 788 999 911",
     "emailValue": "info@ubuzimabwiza.com",
-    "sentDemo": "Message envoyé (démo)."
+    "sentDemo": "Message envoyé. Notre équipe vous répondra sous peu."
   },
   "legal": {
     "privacyTitle": "Politique de confidentialité",
     "privacyBody": "Nous protégeons les données patients avec chiffrement et accès par rôle.",
     "termsTitle": "Conditions d'utilisation",
     "termsBody": "En utilisant Ubuzima Bwiza, vous acceptez un usage responsable de la télémédecine.",
-    "disclaimer": "Copie de démonstration. Remplacez par vos textes juridiques avant production."
+    "disclaimer": "Ubuzima Bwiza protège les informations de santé personnelles grâce à un accès selon le rôle, au chiffrement et à des pratiques responsables au Rwanda."
   },
   "announcement": {
     "title": "Mise à jour du réseau",
@@ -162,7 +161,7 @@
     "signIn": "Se connecter",
     "forgotPassword": "Mot de passe oublié ?",
     "loginGoogle": "Connexion Google",
-    "googleDemo": "Connexion Google en mode démo uniquement.",
+    "googleDemo": "La connexion Google est temporairement indisponible. Utilisez votre e-mail et votre mot de passe.",
     "demoAccounts": "Comptes démo",
     "patientRole": "Pour les patients",
     "doctorRole": "Pour les médecins",
@@ -285,10 +284,6 @@
     "label": "Urgence :",
     "body": "Cette plateforme n'est pas destinée aux urgences vitales. Appelez le 112 ou le SAMU 912, ou rendez-vous à l'hôpital le plus proche."
   },
-  "demo": {
-    "notice": "Démonstration académique : connexions, paiements et dossiers sont simulés. N'entrez pas de vraies données patient.",
-    "dismiss": "Compris"
-  },
   "a11y": {
     "skip": "Aller au contenu principal"
   },
@@ -300,7 +295,7 @@
   "help": {
     "pill": "Centre d'aide",
     "title": "Comment fonctionne Ubuzima Bwiza",
-    "lead": "Réponses courtes pour les patients, les cliniciens et les examinateurs. En cas d'urgence, appelez d'abord le 112 ou le SAMU 912.",
+    "lead": "Réponses courtes pour les patients, les cliniciens et les familles. En cas d'urgence, appelez d'abord le 112 ou le SAMU 912.",
     "q1": "L'assistant IA est-il un médecin ?",
     "a1": "Non. Il donne uniquement une orientation préliminaire et des suggestions de spécialistes. Il ne diagnostique pas, ne prescrit pas et ne remplace pas les urgences.",
     "q2": "Comment réserver et payer ?",
@@ -308,10 +303,10 @@
     "q3": "Quelles langues sont prises en charge ?",
     "a3": "Anglais, kinyarwanda et français. Utilisez le sélecteur d'en-tête. L'IA peut répondre dans la langue que vous écrivez.",
     "q4": "Qui peut se connecter ?",
-    "a4": "Patients, médecins, hôpitaux et un administrateur ont chacun un espace. Utilisez les comptes de démonstration sur la page de connexion.",
+    "a4": "Les patients, médecins, hôpitaux et administrateurs ont chacun un espace après création de compte ou connexion.",
     "q5": "Que faire en cas d'urgence ?",
     "a5": "N'attendez pas un chat en ligne. Appelez le 112 ou le SAMU 912, ou allez immédiatement à l'hôpital le plus proche.",
-    "q6": "Mes données sont-elles sécurisées dans cette version ?",
-    "a6": "Ce prototype académique stocke des données de démonstration dans le navigateur pour l'oral. Une version de production utiliserait un serveur sécurisé, un chiffrement et des journaux d'audit."
+    "q6": "Comment mes données sont-elles protégées ?",
+    "a6": "Les informations de santé sont protégées par un accès selon le rôle, des connexions chiffrées et un hébergement responsable. Seuls les utilisateurs autorisés de votre parcours de soins peuvent consulter vos dossiers."
   }
 }

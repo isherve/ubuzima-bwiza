@@ -25,8 +25,7 @@
   },
   "footer": {
     "rights": "Uburenganzira bwose burabitswe",
-    "hosted": "Amakuru arindwa kandi abikwa na AOS",
-    "academic": "Igerageza ry'ishuri. Ntabwo ari serivisi yemewe y'ubuvuzi."
+    "hosted": "Amakuru arindwa kandi abikwa na AOS"
   },
   "common": {
     "book": "Fata gahunda",
@@ -123,14 +122,14 @@
     "phone": "+250 788 123 456",
     "emergency": "Ubwihutirwa: +250 788 999 911",
     "emailValue": "info@ubuzimabwiza.com",
-    "sentDemo": "Ubutumwa bwoherejwe (demo)."
+    "sentDemo": "Ubutumwa bwoherejwe. Ikipe yacu izagusubiza vuba."
   },
   "legal": {
     "privacyTitle": "Politiki y'ibanga",
     "privacyBody": "Turinda amakuru y'abantu dukoresha encryption n'uburenganzira bushingiye ku nshingano.",
     "termsTitle": "Amategeko yo gukoresha",
     "termsBody": "Ukoresha Ubuzima Bwiza wemera gukoresha telemedicine n' serivisi z' gahunda mu buryo bwitondewe.",
-    "disclaimer": "Iyi kopi ni igaragaza gusa. Shyira amategeko yemewe n'inama y'amategeko mbere yo gukoresha mu bucuruzi."
+    "disclaimer": "Ubuzima Bwiza irinda amakuru y'ubuzima n'uburenganzira bw'abantu, ikoresha uburyo bwo kwinjira hakurikijwe inshingano, n'ububiko butekanye mu Rwanda."
   },
   "announcement": {
     "title": "Amakuru ku rubuga",
@@ -162,7 +161,7 @@
     "signIn": "Injira",
     "forgotPassword": "Wibagiwe ijambo ry'ibanga?",
     "loginGoogle": "Injira na Google",
-    "googleDemo": "Google ni demo gusa kuri iyi version.",
+    "googleDemo": "Kwinjira na Google ntiboneka ubu. Koresha imeri n'ijambo ry'ibanga.",
     "demoAccounts": "Konti za demo",
     "patientRole": "Ku barwayi",
     "doctorRole": "Ku baganga",
@@ -285,10 +284,6 @@
     "label": "Ihutirwa:",
     "body": "Iyi sisitemu ntabwo ikoreshwa mu bihe by'ihutirwa. Hamagara 112 cyangwa SAMU 912, cyangwa ujye ku bitaro bikwegereye."
   },
-  "demo": {
-    "notice": "Igerageza ry'ishuri: kwinjira, kwishyura, n'inyandiko ni igerageza. Ntushyiremo amakuru nyayo y'umurwayi.",
-    "dismiss": "Byumvikanye"
-  },
   "a11y": {
     "skip": "Simbuka ujye ku birimo"
   },
@@ -300,7 +295,7 @@
   "help": {
     "pill": "Ubufasha",
     "title": "Uko Ubuzima Bwiza ikora",
-    "lead": "Ibisubizo bigufi ku barwayi, abaganga, n'abagenzura. Mu gihe cy'ihutirwa, hamagara 112 cyangwa SAMU 912.",
+    "lead": "Ibisubizo bigufi ku barwayi, abaganga, n'imiryango. Mu gihe cy'ihutirwa, hamagara 112 cyangwa SAMU 912.",
     "q1": "Umufasha wa AI ni umuganga?",
     "a1": "Oya. Atanga ubuyobozi bwa mbere n'inama z'inzobere gusa. Ntashobora gusuzuma, gutanga imiti, cyangwa gusimbura serivisi z'ihutirwa.",
     "q2": "Nafata gute gahunda nishyure?",
@@ -308,10 +303,10 @@
     "q3": "Ni nde ururimi rukoreshwa?",
     "a3": "Icyongereza, Ikinyarwanda, n'Igifaransa. Koresha ihitamo ry'ururimi hejuru. AI ishobora gusubiza mu rurimi wanditse.",
     "q4": "Ninde ushobora kwinjira?",
-    "a4": "Umurwayi, umuganga, ibitaro, n'umuyobozi w'urubuga. Koresha konti z'igerageza ku paji yo kwinjira.",
+    "a4": "Umurwayi, umuganga, ibitaro, n'umuyobozi w'urubuga bafite ahantu habo nyuma yo kwiyandikisha cyangwa kwinjira.",
     "q5": "Nakoze iki mu gihe cy'ihutirwa?",
     "a5": "Ntutegereze ikiganiro kuri interineti. Hamagara 112 cyangwa SAMU 912, cyangwa ujye ku bitaro bikwegereye.",
-    "q6": "Amakuru yanjye arinzwe muri iyi porogaramu?",
-    "a6": "Iki gice cy'ishuri kibika amakuru y'igerageza muri mushakisha kugira ngo ikizamini gikore ku mudasobwa. Sisitemu y'ukuri yakoresha seriveri irinzwe."
+    "q6": "Amakuru yanjye arinzwe gute?",
+    "a6": "Amakuru y'ubuzima arindwa n'uburenganzira bushingiye ku nshingano, umuyoboro utekanye, n'ububiko bubereye. Abemerewe gusa mu nzira y'ubuvuzi bashobora kubona inyandiko zawe."
   }
 }

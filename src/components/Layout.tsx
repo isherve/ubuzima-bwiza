@@ -92,7 +92,6 @@ export function Footer() {
             © {new Date().getFullYear()} Ubuzima Bwiza {t('footer.rights')}
           </p>
           <p>{t('footer.hosted')}</p>
-          <p className="footer-meta">{t('footer.academic')}</p>
         </div>
         <div className="footer-links">
           <Link to="/help">{t('nav.help')}</Link>

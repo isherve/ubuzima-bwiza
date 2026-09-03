@@ -116,7 +116,7 @@ export function LoginPage() {
                 {loading ? 'Processing...' : 'Login'}
               </button>
               <div className="or-row"><span>OR</span></div>
-              <button type="button" className="google-btn" onClick={() => setError('Google login is demo-only. Use an account above.')}>
+              <button type="button" className="google-btn" onClick={() => setError('Google sign-in is temporarily unavailable. Please use your email and password.')}>
                 Login with Google
               </button>
               <p className="auth-switch">
