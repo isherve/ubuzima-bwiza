@@ -90,15 +90,15 @@ export function downloadPrintableReport(options: {
   <meta charset="utf-8" />
   <title>${options.title}</title>
   <style>
-    body { font-family: Arial, sans-serif; color: #0b3d3a; margin: 32px; }
+    body { font-family: Arial, sans-serif; color: #111827; margin: 32px; }
     h1 { margin: 0 0 6px; font-size: 22px; }
-    .sub { color: #3d6b66; margin-bottom: 20px; }
+    .sub { color: #6b7280; margin-bottom: 20px; }
     table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    th, td { border: 1px solid #cce5df; padding: 8px 10px; text-align: left; font-size: 13px; }
-    th { background: #e8f7f2; }
+    th, td { border: 1px solid #d1fae5; padding: 8px 10px; text-align: left; font-size: 13px; }
+    th { background: #ecfdf5; }
     .meta { margin: 4px 0; }
-    .brand { color: #0f9f8a; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 12px; }
-    .footer { margin-top: 28px; font-size: 12px; color: #3d6b66; }
+    .brand { color: #059669; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 12px; }
+    .footer { margin-top: 28px; font-size: 12px; color: #6b7280; }
     @media print { .no-print { display: none; } }
   </style>
 </head>

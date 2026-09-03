@@ -1,49 +1,51 @@
 import { Link, NavLink, Navigate, Outlet } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { dashboardPath, useAuth } from '../../context/AuthContext'
 import type { Role } from '../../data'
 
 const patientLinks = [
-  ['/my-appointments', 'Appointments'],
-  ['/payments', 'Payments'],
-  ['/doctors', 'Find doctors'],
-  ['/messages', 'Messages'],
-  ['/medications', 'Medications'],
-  ['/medical-record', 'Records'],
-  ['/patient/chronic-care', 'Chronic care'],
-  ['/ai-assistant', 'AI assistant'],
-  ['/my-profile', 'Profile'],
+  ['/my-appointments', 'patient.appointments'],
+  ['/payments', 'patient.payments'],
+  ['/doctors', 'nav.doctors'],
+  ['/messages', 'patient.messages'],
+  ['/medications', 'patient.medications'],
+  ['/medical-record', 'patient.records'],
+  ['/patient/chronic-care', 'nav.chronicCare'],
+  ['/ai-assistant', 'nav.aiAssistant'],
+  ['/my-profile', 'common.profile'],
 ]
 
 const doctorLinks = [
-  ['/doctor-dashboard', 'Overview'],
-  ['/doctor-appointments', 'Appointments'],
-  ['/doctor-calendar', 'Calendar'],
-  ['/patients', 'Patients'],
-  ['/doctor/availability', 'Availability'],
-  ['/doctor-reports', 'Reports'],
-  ['/doctor-messages', 'Messages'],
-  ['/doctor-profile', 'Profile'],
+  ['/doctor-dashboard', 'doctor.overview'],
+  ['/doctor-appointments', 'doctor.appointments'],
+  ['/doctor-calendar', 'doctor.calendar'],
+  ['/patients', 'doctor.patients'],
+  ['/doctor/availability', 'doctor.availability'],
+  ['/doctor-reports', 'doctor.reports'],
+  ['/doctor-messages', 'patient.messages'],
+  ['/doctor-profile', 'common.profile'],
 ]
 
 const hospitalLinks = [
-  ['/hospital-dashboard', 'Overview'],
-  ['/hospital-dashboard/doctors', 'Doctors'],
-  ['/hospital-dashboard/patients', 'Patients'],
-  ['/hospital-dashboard/reception/appointments', 'Appointments'],
-  ['/hospital-dashboard/messages', 'Messages'],
-  ['/hospital-dashboard/reports', 'Reports'],
-  ['/hospital-dashboard/settings', 'Settings'],
+  ['/hospital-dashboard', 'hospital.overview'],
+  ['/hospital-dashboard/doctors', 'hospital.doctors'],
+  ['/hospital-dashboard/patients', 'hospital.patients'],
+  ['/hospital-dashboard/reception/appointments', 'hospital.appointments'],
+  ['/hospital-dashboard/messages', 'patient.messages'],
+  ['/hospital-dashboard/reports', 'hospital.reports'],
+  ['/hospital-dashboard/settings', 'hospital.settings'],
 ]
 
 const adminLinks = [
-  ['/admin-dashboard', 'Overview'],
-  ['/manage-users', 'Users'],
-  ['/doctor-approvals', 'Doctor approvals'],
-  ['/hospital-approvals', 'Hospital approvals'],
-  ['/all-appointments', 'All appointments'],
-  ['/payment-approvals', 'Payments'],
-  ['/announcements', 'Announcements'],
-  ['/settings', 'Settings'],
+  ['/admin-dashboard', 'admin.overview'],
+  ['/manage-users', 'admin.users'],
+  ['/admin-content', 'admin.content'],
+  ['/doctor-approvals', 'admin.doctorApprovals'],
+  ['/hospital-approvals', 'admin.hospitalApprovals'],
+  ['/all-appointments', 'admin.allAppointments'],
+  ['/payment-approvals', 'admin.payments'],
+  ['/announcements', 'admin.announcements'],
+  ['/settings', 'admin.settings'],
 ]
 
 function linksFor(role: Role) {
@@ -62,8 +64,9 @@ export function RequireAuth({ roles }: { roles?: Role[] }) {
   return <Outlet />
 }
 
-export function DashboardShell({ title }: { title: string }) {
+export function DashboardShell({ titleKey }: { titleKey: string }) {
   const { user, logout } = useAuth()
+  const { t } = useTranslation()
   if (!user) return <Navigate to="/login" replace />
   const links = linksFor(user.role)
 
@@ -74,25 +77,27 @@ export function DashboardShell({ title }: { title: string }) {
           <span className="brand-mark" aria-hidden>
             +
           </span>
-          <span className="brand-text">Ubuzima Bwiza</span>
+          <span className="brand-text">
+            Ubuzima <span className="brand-accent">Bwiza</span>
+          </span>
         </Link>
         <p className="dash-role">{user.role.toUpperCase()}</p>
         <nav className="dash-nav">
-          {links.map(([to, label]) => (
+          {links.map(([to, labelKey]) => (
             <NavLink key={to} to={to} end={to.split('/').length <= 2}>
-              {label}
+              {t(labelKey)}
             </NavLink>
           ))}
         </nav>
         <button type="button" className="btn btn-outline dash-logout" onClick={logout}>
-          Logout
+          {t('nav.logout')}
         </button>
       </aside>
       <div className="dash-main">
         <header className="dash-top">
           <div>
-            <p className="eyebrow">Ubuzima Bwiza</p>
-            <h1>{title}</h1>
+            <p className="eyebrow">{t('common.brand')}</p>
+            <h1>{t(titleKey)}</h1>
           </div>
           <div className="dash-user">
             <strong>{user.name}</strong>
@@ -129,5 +134,7 @@ export function EmptyState({ text }: { text: string }) {
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  return <span className={`badge badge-${status}`}>{status}</span>
+  const { t } = useTranslation()
+  const label = t(`status.${status}`, { defaultValue: status })
+  return <span className={`badge badge-${status}`}>{label}</span>
 }

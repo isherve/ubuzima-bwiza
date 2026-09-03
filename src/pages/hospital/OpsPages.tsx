@@ -1,5 +1,8 @@
+import { useTranslation } from 'react-i18next'
 import { StatGrid, StatusBadge } from '../../components/dashboard/Shell'
+import { LanguageSwitcher } from '../../components/LanguageSwitcher'
 import { useAuth } from '../../context/AuthContext'
+import { useAppText } from '../../context/ContentContext'
 import { demoUsers, doctors } from '../../data'
 import {
   appointmentsTableHtml,
@@ -180,26 +183,28 @@ export function HospitalSettingsPage() {
 
 export function AdminDashboardPage() {
   const { appointments } = useAuth()
+  const { t } = useTranslation()
   return (
     <div className="stack">
       <StatGrid
         items={[
-          { label: 'Users', value: demoUsers.length },
-          { label: 'Doctors', value: doctors.length },
-          { label: 'Appointments', value: appointments.length },
-          { label: 'Pending approvals', value: 2 },
+          { label: t('admin.users'), value: demoUsers.length },
+          { label: t('hospital.doctors'), value: doctors.length },
+          { label: t('admin.allAppointments'), value: appointments.length },
+          { label: t('admin.doctorApprovals'), value: 2 },
         ]}
       />
-      <h2>Platform admin</h2>
-      <p className="lead">Oversee users, provider approvals, announcements, and system health.</p>
+      <h2>{t('admin.platformAdmin')}</h2>
+      <p className="lead">{t('admin.platformLead')}</p>
     </div>
   )
 }
 
 export function ManageUsersPage() {
+  const { t } = useTranslation()
   return (
     <div className="stack">
-      <h2>Manage users</h2>
+      <h2>{t('admin.manageUsers')}</h2>
       <div className="table">
         {demoUsers.map((u) => (
           <div className="table-row" key={u.id}>
@@ -216,22 +221,23 @@ export function ManageUsersPage() {
   )
 }
 
-export function ApprovalsPage({ title }: { title: string }) {
+export function ApprovalsPage({ titleKey }: { titleKey: string }) {
+  const { t } = useTranslation()
   return (
     <div className="stack">
-      <h2>{title}</h2>
+      <h2>{t(titleKey)}</h2>
       <div className="table">
         <div className="table-row">
           <div>
-            <strong>Pending application #1042</strong>
-            <p>Submitted 2 days ago · awaiting review</p>
+            <strong>{t('admin.pendingApp')}</strong>
+            <p>{t('admin.pendingMeta')}</p>
           </div>
           <div className="row-actions">
             <button className="btn btn-primary" type="button">
-              Approve
+              {t('common.approve')}
             </button>
             <button className="btn btn-outline" type="button">
-              Reject
+              {t('common.reject')}
             </button>
           </div>
         </div>
@@ -242,9 +248,10 @@ export function ApprovalsPage({ title }: { title: string }) {
 
 export function AllAppointmentsPage() {
   const { appointments } = useAuth()
+  const { t } = useTranslation()
   return (
     <div className="stack">
-      <h2>All appointments</h2>
+      <h2>{t('admin.allAppointments')}</h2>
       <div className="table">
         {appointments.map((apt) => (
           <div className="table-row" key={apt.id}>
@@ -265,25 +272,31 @@ export function AllAppointmentsPage() {
 }
 
 export function AnnouncementsPage() {
+  const { text } = useAppText()
+  const { t } = useTranslation()
   return (
     <div className="stack">
-      <h2>Announcements</h2>
+      <h2>{t('admin.announcements')}</h2>
       <div className="feature">
-        <h3>Network update</h3>
-        <p>Teleconsult capacity expanded for cardiology and pediatrics this week.</p>
+        <h3>{text('announcement.title')}</h3>
+        <p>{text('announcement.body')}</p>
       </div>
+      <p className="lead">
+        <a href="/admin-content">{t('admin.content')}</a>
+      </p>
     </div>
   )
 }
 
 export function SettingsPage() {
+  const { t } = useTranslation()
   return (
     <div className="stack">
-      <h2>Settings</h2>
+      <h2>{t('admin.settings')}</h2>
       <div className="feature">
-        <p>Language: English / Kinyarwanda</p>
-        <p>Theme: Ubuzima Bwiza emerald</p>
-        <p>Security: 2FA available in production</p>
+        <LanguageSwitcher />
+        <p>{t('admin.themeNote')}</p>
+        <p>{t('admin.securityNote')}</p>
       </div>
     </div>
   )

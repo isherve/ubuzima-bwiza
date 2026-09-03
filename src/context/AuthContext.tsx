@@ -17,6 +17,7 @@ import {
   type Role,
   type User,
 } from '../data'
+import i18n from '../i18n'
 
 type AuthContextValue = {
   user: User | null
@@ -97,10 +98,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const found = demoUsers.find(
       (u) => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password,
     )
-    if (!found) return { ok: false, message: 'Invalid email or password.' }
+    if (!found) return { ok: false, message: i18n.t('auth.invalidCredentials') }
     const { password: _pw, ...safe } = found
     setUser(safe)
-    return { ok: true, message: 'Login successful.', role: safe.role }
+    return { ok: true, message: i18n.t('auth.loginSuccess'), role: safe.role }
   }, [])
 
   const register = useCallback(
@@ -131,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       type: 'in-person' | 'video'
       notes?: string
     }) => {
-      if (!user) return { ok: false, message: 'Please log in first.' }
+      if (!user) return { ok: false, message: i18n.t('auth.pleaseLogin') }
       const doctor = doctors.find((d) => d.id === input.doctorId)
       if (!doctor) return { ok: false, message: 'Doctor not found.' }
       const apt: Appointment = {
@@ -151,7 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setAppointments((prev) => [apt, ...prev])
       return {
         ok: true,
-        message: 'Appointment requested. Please complete payment to confirm.',
+        message: i18n.t('auth.appointmentRequested'),
         appointmentId: apt.id,
       }
     },
@@ -180,7 +181,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }),
     )
     if (!receiptId) return { ok: false, message: 'Payment already completed or appointment missing.' }
-    return { ok: true, message: 'Payment successful.', receiptId }
+    return { ok: true, message: i18n.t('auth.paymentSuccess'), receiptId }
   }, [])
 
   const value = useMemo(
