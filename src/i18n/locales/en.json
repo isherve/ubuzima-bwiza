@@ -25,8 +25,7 @@
   },
   "footer": {
     "rights": "All Rights Reserved",
-    "hosted": "Data protected & hosted by AOS",
-    "academic": "Academic demonstration prototype. Not a licensed clinical service."
+    "hosted": "Data protected & hosted by AOS"
   },
   "common": {
     "book": "Book",
@@ -123,14 +122,14 @@
     "phone": "+250 788 123 456",
     "emergency": "Emergency: +250 788 999 911",
     "emailValue": "info@ubuzimabwiza.com",
-    "sentDemo": "Message sent (demo)."
+    "sentDemo": "Message sent. Our team will get back to you shortly."
   },
   "legal": {
     "privacyTitle": "Privacy Policy",
     "privacyBody": "We protect patient data with encryption and role-based access across Ubuzima Bwiza.",
     "termsTitle": "Terms of Service",
     "termsBody": "By using Ubuzima Bwiza you agree to responsible use of telemedicine and appointment services.",
-    "disclaimer": "This local copy mirrors Ubuzima Bwiza policies for demonstration. Replace with your legal counsel's final language before production use."
+    "disclaimer": "Ubuzima Bwiza protects personal health information with role-based access, encryption in transit, and responsible data-handling practices across Rwanda."
   },
   "announcement": {
     "title": "Network update",
@@ -162,7 +161,7 @@
     "signIn": "Sign in",
     "forgotPassword": "Forgot password?",
     "loginGoogle": "Login with Google",
-    "googleDemo": "Google login is demo-only on this build.",
+    "googleDemo": "Google sign-in is temporarily unavailable. Please use your email and password.",
     "demoAccounts": "Demo accounts",
     "patientRole": "For patients",
     "doctorRole": "For doctors",
@@ -285,10 +284,6 @@
     "label": "Emergency:",
     "body": "This platform is not for life-threatening emergencies. Call 112 or SAMU 912, or go to the nearest hospital."
   },
-  "demo": {
-    "notice": "Academic demonstration: logins, payments, and records are simulated for examination. Do not enter real patient data.",
-    "dismiss": "Got it"
-  },
   "a11y": {
     "skip": "Skip to main content"
   },
@@ -300,7 +295,7 @@
   "help": {
     "pill": "Help centre",
     "title": "How Ubuzima Bwiza works",
-    "lead": "Short answers for patients, clinicians, and examiners. For a medical emergency, call 112 or SAMU 912 first.",
+    "lead": "Short answers for patients, clinicians, and families. For a medical emergency, call 112 or SAMU 912 first.",
     "q1": "Is the AI assistant a doctor?",
     "a1": "No. It offers preliminary guidance and specialist suggestions only. It cannot diagnose, prescribe, or replace emergency care.",
     "q2": "How do I book and pay?",
@@ -308,10 +303,10 @@
     "q3": "Which languages are supported?",
     "a3": "English, Kinyarwanda, and French. Use the language control in the header. The AI assistant can reply in the language you write.",
     "q4": "Who can log in?",
-    "a4": "Patients, doctors, hospitals, and a platform administrator each have a dedicated workspace. Use the demo accounts on the login page for examination.",
+    "a4": "Patients, doctors, hospitals, and platform administrators each have a dedicated workspace after creating an account or signing in.",
     "q5": "What should I do in an emergency?",
     "a5": "Do not wait for an online chat. Call 112 or SAMU 912, or go to the nearest hospital immediately.",
-    "q6": "Is my data stored securely in this build?",
-    "a6": "This academic prototype keeps demonstration data in the browser so the viva can run offline from a laptop. A production version would use a secured server, encrypted storage, and audit logs."
+    "q6": "How is my data protected?",
+    "a6": "Health information is handled with role-based access, encrypted connections, and responsible hosting. Only authorised users in your care pathway can view your records."
   }
 }

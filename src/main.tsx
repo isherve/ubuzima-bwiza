@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 import App from './App'
 import { AiFloatingWidget } from './components/AiChat'
-import { DemoNotice, EmergencyBar, ScrollToTop, SkipLink } from './components/AppChrome'
+import { EmergencyBar, ScrollToTop, SkipLink } from './components/AppChrome'
 import { AuthProvider } from './context/AuthContext'
 import { ContentProvider } from './context/ContentContext'
 import { ThemeProvider } from './context/ThemeContext'
@@ -25,7 +25,6 @@ createRoot(document.getElementById('root')!).render(
                 <ScrollToTop />
                 <App />
                 <AiFloatingWidget />
-                <DemoNotice />
               </ToastProvider>
             </AuthProvider>
           </ContentProvider>
