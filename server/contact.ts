@@ -1,5 +1,3 @@
-import { Resend } from 'resend'
-
 export type ContactPayload = {
   name: string
   email: string
@@ -7,14 +5,6 @@ export type ContactPayload = {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function escapeHtml(value: string) {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-}
 
 function clean(value: unknown, max: number) {
   return String(value ?? '')
@@ -36,31 +26,26 @@ export function parseContactPayload(body: unknown): ContactPayload | null {
 }
 
 export async function sendContactEmail(payload: ContactPayload) {
-  const apiKey = process.env.RESEND_API_KEY?.trim()
-  if (!apiKey) {
-    throw new Error('Contact email is not configured.')
-  }
-
   const to = process.env.CONTACT_TO?.trim() || 'ishimwehervin10@gmail.com'
-  const from =
-    process.env.RESEND_FROM?.trim() || 'Ubuzima Bwiza <beth.t@example.com>'
-
-  const resend = new Resend(apiKey)
-  const { error } = await resend.emails.send({
-    from,
-    to,
-    replyTo: payload.email,
-    subject: `[Ubuzima Bwiza] Contact from ${payload.name}`,
-    text: `Name: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`,
-    html: `
-      <h2>New contact message</h2>
-      <p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
-      <p>${escapeHtml(payload.message).replaceAll('\n', '<br />')}</p>
-    `,
+  const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      name: payload.name,
+      email: payload.email,
+      message: payload.message,
+      _replyto: payload.email,
+      _subject: `[Ubuzima Bwiza] Contact from ${payload.name}`,
+      _template: 'table',
+      _captcha: 'false',
+    }),
   })
 
-  if (error) {
-    throw new Error(error.message || 'Resend failed to send the message.')
+  const result = (await response.json()) as { success?: string | boolean; message?: string }
+  if (!response.ok || !result.success) {
+    throw new Error(result.message || 'Could not send the message.')
   }
 }

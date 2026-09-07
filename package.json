@@ -16,8 +16,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-i18next": "^17.0.13",
-    "react-router-dom": "^7.18.1",
-    "resend": "^6.26.0"
+    "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
     "@netlify/functions": "^6.0.0",
