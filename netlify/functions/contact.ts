@@ -1,5 +1,5 @@
 import type { Handler } from '@netlify/functions'
-import { parseContactPayload, sendContactEmail } from '../../server/contact'
+import { originFromHeaders, parseContactPayload, sendContactEmail } from '../../server/contact'
 
 export const handler: Handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
@@ -19,7 +19,7 @@ export const handler: Handler = async (event) => {
       }
     }
 
-    await sendContactEmail(payload)
+    await sendContactEmail(payload, originFromHeaders(event.headers))
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },

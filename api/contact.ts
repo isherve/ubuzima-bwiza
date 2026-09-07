@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { parseContactPayload, sendContactEmail } from '../server/contact.js'
+import { originFromHeaders, parseContactPayload, sendContactEmail } from '../server/contact.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') {
@@ -20,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return
     }
 
-    await sendContactEmail(payload)
+    await sendContactEmail(payload, originFromHeaders(req.headers as Record<string, string | string[] | undefined>))
     res.status(200).json({ success: true })
   } catch {
     res.status(502).json({ error: 'Could not send the message.' })
