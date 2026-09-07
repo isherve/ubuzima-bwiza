@@ -1,5 +1,6 @@
 ﻿import { useTranslation } from 'react-i18next'
 import { StatGrid, StatusBadge } from '../../components/dashboard/Shell'
+import { JoinVideoButton } from '../../components/JoinVideoButton'
 import { LanguageSwitcher } from '../../components/LanguageSwitcher'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { useAuth } from '../../context/AuthContext'
@@ -86,7 +87,10 @@ export function HospitalAppointmentsPage() {
                 {apt.date} {apt.time} | {apt.type}
               </p>
             </div>
-            <StatusBadge status={apt.status} />
+            <div className="row-actions">
+              <StatusBadge status={apt.status} />
+              <JoinVideoButton apt={apt} />
+            </div>
           </div>
         ))}
       </div>
@@ -265,7 +269,10 @@ export function AllAppointmentsPage() {
                 {apt.date} {apt.time}
               </p>
             </div>
-            <StatusBadge status={apt.status} />
+            <div className="row-actions">
+              <StatusBadge status={apt.status} />
+              <JoinVideoButton apt={apt} />
+            </div>
           </div>
         ))}
       </div>

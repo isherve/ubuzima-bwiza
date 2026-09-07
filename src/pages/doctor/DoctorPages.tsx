@@ -1,4 +1,5 @@
 ﻿import { EmptyState, StatGrid, StatusBadge } from '../../components/dashboard/Shell'
+import { JoinVideoButton } from '../../components/JoinVideoButton'
 import { useAuth } from '../../context/AuthContext'
 import { doctors } from '../../data'
 
@@ -44,6 +45,7 @@ export function DoctorAppointmentsPage() {
               </div>
               <div className="row-actions">
                 <StatusBadge status={apt.status} />
+                <JoinVideoButton apt={apt} />
                 {apt.status === 'pending' ? (
                   <>
                     <button className="btn btn-primary" type="button" onClick={() => updateAppointmentStatus(apt.id, 'approved')}>
@@ -85,7 +87,10 @@ export function DoctorCalendarPage() {
                 {apt.patientName} | {apt.type}
               </p>
             </div>
-            <StatusBadge status={apt.status} />
+            <div className="row-actions">
+              <StatusBadge status={apt.status} />
+              <JoinVideoButton apt={apt} />
+            </div>
           </div>
         ))}
       </div>

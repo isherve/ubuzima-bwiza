@@ -43,6 +43,7 @@ import {
 } from './pages/hospital/OpsPages'
 import { AdminContentPage } from './pages/admin/AdminContentPage'
 import { PayAppointmentPage, PaymentsPage } from './pages/PaymentsPage'
+import { VideoVisitPage } from './pages/VideoVisitPage'
 
 function MarketingLayout() {
   return (
@@ -131,6 +132,10 @@ export default function App() {
           <Route path="announcements" element={<AnnouncementsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
+      </Route>
+
+      <Route element={<RequireAuth roles={['patient', 'doctor', 'hospital', 'admin']} />}>
+        <Route path="visit/:id" element={<VideoVisitPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

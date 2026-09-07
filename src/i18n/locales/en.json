@@ -308,6 +308,8 @@
     "q5": "What should I do in an emergency?",
     "a5": "Do not wait for an online chat. Call 112 or SAMU 912, or go to the nearest hospital immediately.",
     "q6": "How is my data protected?",
-    "a6": "Health information is handled with role-based access, encrypted connections, and responsible hosting. Only authorised users in your care pathway can view your records."
+    "a6": "Health information is handled with role-based access, encrypted connections, and responsible hosting. Only authorised users in your care pathway can view your records.",
+    "q7": "How do video visits work?",
+    "a7": "Book a video consultation, wait for the doctor to approve it, then tap Join video visit. Patient and doctor enter the same private room. For emergencies, call 112 or SAMU 912 instead."
   }
 }
