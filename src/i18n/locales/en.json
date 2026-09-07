@@ -121,8 +121,10 @@
     "address": "KG 123 St, Kigali, Rwanda",
     "phone": "+250 788 123 456",
     "emergency": "Emergency: +250 788 999 911",
-    "emailValue": "info@ubuzimabwiza.com",
-    "sentDemo": "Message sent. Our team will get back to you shortly."
+    "emailValue": "ishimwehervin10@gmail.com",
+    "sending": "Sending…",
+    "sentDemo": "Message sent. Our team will get back to you shortly.",
+    "sendError": "Could not send the message. Please email ishimwehervin10@gmail.com directly."
   },
   "legal": {
     "privacyTitle": "Privacy Policy",

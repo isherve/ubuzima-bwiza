@@ -1,6 +1,9 @@
+import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppText } from '../../context/ContentContext'
 import { useToast } from '../../context/ToastContext'
+
+const CONTACT_INBOX = 'ishimwehervin10@gmail.com'
 
 const ABOUT_FEATURES = [
   ['home.feature1Title', 'home.feature1Body'],
@@ -39,6 +42,44 @@ export function AboutPage() {
 export function ContactPage() {
   const { text } = useAppText()
   const { notify } = useToast()
+  const [sending, setSending] = useState(false)
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const data = new FormData(form)
+    const name = String(data.get('name') ?? '').trim()
+    const email = String(data.get('email') ?? '').trim()
+    const message = String(data.get('message') ?? '').trim()
+
+    setSending(true)
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_INBOX}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          _replyto: email,
+          _subject: `[Ubuzima Bwiza] Contact from ${name}`,
+          _template: 'table',
+          _captcha: 'false',
+        }),
+      })
+      const result = (await response.json()) as { success?: string | boolean }
+      if (!response.ok || !result.success) throw new Error('Failed to send')
+      form.reset()
+      notify(text('contact.sentDemo'))
+    } catch {
+      notify(text('contact.sendError'))
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
     <section className="section">
@@ -47,27 +88,21 @@ export function ContactPage() {
         <h1>{text('contact.title')}</h1>
         <p>{text('contact.body')}</p>
         <div className="contact-grid">
-          <form
-            className="search-card"
-            onSubmit={(e) => {
-              e.preventDefault()
-              notify(text('contact.sentDemo'))
-            }}
-          >
+          <form className="search-card" onSubmit={onSubmit}>
             <div className="field">
               <label htmlFor="name">{text('contact.fullName')}</label>
-              <input id="name" required />
+              <input id="name" name="name" autoComplete="name" required />
             </div>
             <div className="field">
               <label htmlFor="email">{text('contact.email')}</label>
-              <input id="email" type="email" required />
+              <input id="email" name="email" type="email" autoComplete="email" required />
             </div>
             <div className="field">
               <label htmlFor="message">{text('contact.message')}</label>
-              <input id="message" required />
+              <textarea id="message" name="message" rows={5} required />
             </div>
-            <button className="btn btn-primary btn-full" type="submit">
-              {text('contact.send')}
+            <button className="btn btn-primary btn-full" type="submit" disabled={sending}>
+              {sending ? text('contact.sending') : text('contact.send')}
             </button>
           </form>
           <div className="feature">
@@ -75,7 +110,9 @@ export function ContactPage() {
             <p>{text('contact.address')}</p>
             <p>{text('contact.phone')}</p>
             <p>{text('contact.emergency')}</p>
-            <p>{text('contact.emailValue')}</p>
+            <p>
+              <a href={`mailto:${CONTACT_INBOX}`}>{CONTACT_INBOX}</a>
+            </p>
           </div>
         </div>
       </div>

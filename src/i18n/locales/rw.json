@@ -121,8 +121,10 @@
     "address": "KG 123 St, Kigali, Rwanda",
     "phone": "+250 788 123 456",
     "emergency": "Ubwihutirwa: +250 788 999 911",
-    "emailValue": "info@ubuzimabwiza.com",
-    "sentDemo": "Ubutumwa bwoherejwe. Ikipe yacu izagusubiza vuba."
+    "emailValue": "ishimwehervin10@gmail.com",
+    "sending": "Birimo koherezwa…",
+    "sentDemo": "Ubutumwa bwoherejwe. Ikipe yacu izagusubiza vuba.",
+    "sendError": "Ubutumwa ntabwo bwoherejwe. Andikira ishimwehervin10@gmail.com."
   },
   "legal": {
     "privacyTitle": "Politiki y'ibanga",
