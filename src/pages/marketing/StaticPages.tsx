@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppText } from '../../context/ContentContext'
 import { useToast } from '../../context/ToastContext'
+import { sendContactMessage } from '../../lib/contactClient'
 
 const CONTACT_INBOX = 'ishimwehervin10@gmail.com'
 const CONTACT_PHONES = ['0790277611', '0781011343'] as const
@@ -55,24 +56,7 @@ export function ContactPage() {
 
     setSending(true)
     try {
-      const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_INBOX}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          message,
-          _replyto: email,
-          _subject: `[Ubuzima Bwiza] Contact from ${name}`,
-          _template: 'table',
-          _captcha: 'false',
-        }),
-      })
-      const result = (await response.json()) as { success?: string | boolean }
-      if (!response.ok || !result.success) throw new Error('Failed to send')
+      await sendContactMessage({ name, email, message })
       form.reset()
       notify(text('contact.sentDemo'))
     } catch {
