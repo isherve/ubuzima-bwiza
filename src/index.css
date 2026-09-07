@@ -1451,6 +1451,81 @@ h3 {
 .pay-method strong { color: var(--ink); }
 .pay-method span { color: var(--ink-soft); font-size:0.8rem; }
 .pay-method.active { border-color: var(--primary); background: var(--primary-soft); }
+
+.pay-checkout { max-width: 640px; }
+.pay-steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.35rem;
+  padding: 0;
+  margin: 0;
+}
+.pay-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  text-align: center;
+}
+.pay-step span {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.pay-step.done span,
+.pay-step.current span {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+.pay-step.current { color: var(--primary-dark); }
+
+.pay-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+.pay-summary article {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+}
+.pay-summary span { color: var(--ink-soft); font-size: 0.78rem; display: block; }
+.pay-summary strong { font-size: 1.15rem; }
+
+.pay-invoice {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow);
+}
+.pay-invoice-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 0.85rem;
+}
+.pay-invoice-head h3 { font-size: 1.1rem; }
+.pay-lines { display: grid; gap: 0.65rem; }
+.pay-lines > div { display: flex; justify-content: space-between; gap: 1rem; }
+.pay-lines dt { color: var(--ink-soft); font-size: 0.82rem; }
+.pay-lines dd { text-align: right; font-weight: 650; }
+.pay-lines dd span { display: block; font-weight: 500; color: var(--ink-soft); font-size: 0.78rem; }
+.pay-lines .total { border-top: 1px solid var(--border); padding-top: 0.7rem; font-size: 1.05rem; }
+.pay-card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.field-hint { color: var(--ink-soft); font-size: 0.78rem; margin-top: 0.35rem; }
+.highlight-row { outline: 2px solid var(--primary); }
 .badge-paid { background: var(--primary-soft); color: var(--primary-dark); }
 .badge-pending { background:#fef3c7; color:#92400e; }
 .badge-failed { background:#fee2e2; color:#b91c1c; }
@@ -1781,4 +1856,7 @@ h3 {
 
 @media (max-width: 720px) {
   .demo-notice { left: 0.6rem; right: 0.6rem; max-width: none; bottom: 4.8rem; }
+  .pay-steps { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .pay-step { font-size: 0.62rem; }
+  .pay-summary, .pay-card-row { grid-template-columns: 1fr; }
 }

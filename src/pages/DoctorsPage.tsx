@@ -169,8 +169,18 @@ export function BookAppointmentPage() {
         <p className="pill">Booking</p>
         <h1>Book with {doctor.name}</h1>
         <p className="lead">
-          {doctor.specialty} | {doctor.fee.toLocaleString()} RWF
+          {doctor.specialty} · {doctor.hospital}
         </p>
+        <div className="pay-invoice" style={{ marginBottom: '1.25rem' }}>
+          <div className="pay-invoice-head">
+            <div>
+              <p className="eyebrow">Consultation fee</p>
+              <h3>{doctor.name}</h3>
+            </div>
+            <strong>{doctor.fee.toLocaleString()} RWF</strong>
+          </div>
+          <p className="field-hint">You will review and pay this invoice in the next step.</p>
+        </div>
         <form className="search-card auth-form" onSubmit={onSubmit}>
           <div className="field">
             <label htmlFor="date">Date *</label>
@@ -206,7 +216,7 @@ export function BookAppointmentPage() {
           </button>
           {aiTip ? <p className="success">{aiTip}</p> : null}
           <button className="btn btn-primary btn-full" type="submit">
-            {user ? 'Confirm booking' : 'Login to book'}
+            {user ? 'Confirm booking and pay' : 'Login to book'}
           </button>
           {message ? <p className="success">{message}</p> : null}
         </form>

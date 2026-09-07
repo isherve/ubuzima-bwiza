@@ -117,14 +117,18 @@ export function downloadPrintableReport(options: {
 
 export function appointmentReceiptHtml(a: Appointment) {
   return `
+    <p class="meta"><strong>Invoice:</strong> INV-${a.id.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(-8)}</p>
     <p class="meta"><strong>Receipt:</strong> ${a.receiptId ?? 'Pending'}</p>
     <p class="meta"><strong>Patient:</strong> ${a.patientName}</p>
-    <p class="meta"><strong>Doctor:</strong> ${a.doctorName} (${a.specialty})</p>
-    <p class="meta"><strong>Visit:</strong> ${a.date} at ${a.time} | ${a.type}</p>
-    <p class="meta"><strong>Amount:</strong> ${formatRwf(a.amount)}</p>
+    <p class="meta"><strong>Clinician:</strong> ${a.doctorName} (${a.specialty})</p>
+    <p class="meta"><strong>Visit:</strong> ${a.date} at ${a.time} | ${a.type === 'video' ? 'Video consultation' : 'In-person'}</p>
+    <p class="meta"><strong>Consultation fee:</strong> ${formatRwf(a.amount)}</p>
+    <p class="meta"><strong>Service fee:</strong> 0 RWF</p>
+    <p class="meta"><strong>Total paid:</strong> ${formatRwf(a.amount)}</p>
     <p class="meta"><strong>Payment:</strong> ${a.paymentStatus}${a.paymentMethod ? ` | ${methodLabel(a.paymentMethod)}` : ''}</p>
     ${a.paidAt ? `<p class="meta"><strong>Paid at:</strong> ${new Date(a.paidAt).toLocaleString()}</p>` : ''}
     ${a.notes ? `<p class="meta"><strong>Notes:</strong> ${a.notes}</p>` : ''}
+    <p class="meta">This receipt confirms payment for professional medical consultation via Ubuzima Bwiza.</p>
   `
 }
 
