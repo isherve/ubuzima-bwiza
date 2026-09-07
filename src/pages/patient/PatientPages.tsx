@@ -68,7 +68,7 @@ export function PatientAppointmentsPage() {
                 <JoinVideoButton apt={apt} />
                 {apt.paymentStatus !== 'paid' ? (
                   <Link to={`/pay/${apt.id}`} className="btn btn-primary">
-                    Pay
+                    Pay invoice
                   </Link>
                 ) : (
                   <Link to="/payments" className="btn btn-outline">
