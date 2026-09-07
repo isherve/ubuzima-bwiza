@@ -8,10 +8,11 @@ export function videoVisitPath(appointmentId: string) {
   return `/visit/${appointmentId}`
 }
 
-export function jitsiVisitUrl(appointmentId: string, displayName: string) {
+export function jitsiVisitUrl(appointmentId: string, displayName: string, video = true) {
   const room = videoRoomName(appointmentId)
   const name = encodeURIComponent(displayName || 'Guest')
-  return `https://meet.jit.si/${room}#userInfo.displayName="${name}"&config.prejoinPageEnabled=true`
+  const videoMuted = video ? 'false' : 'true'
+  return `https://meet.jit.si/${room}#userInfo.displayName="${name}"&config.prejoinPageEnabled=false&config.startWithVideoMuted=${videoMuted}&config.startWithAudioMuted=false&config.disableInviteFunctions=true&config.requireDisplayName=false`
 }
 
 export function canJoinVideoVisit(apt: Appointment) {

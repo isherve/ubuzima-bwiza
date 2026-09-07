@@ -1671,6 +1671,114 @@ h3 {
   color: #a7f3d0;
 }
 
+.consult-shell {
+  min-height: 100vh;
+  display: grid;
+  background: #07150e;
+}
+
+.consult-stage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.consult-waiting {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.85rem;
+  text-align: center;
+  padding: 2rem 1.25rem;
+  color: #ecfdf5;
+}
+
+.consult-waiting h2 {
+  font-size: 1.6rem;
+}
+
+.consult-waiting p {
+  max-width: 32rem;
+  color: #a7f3d0;
+  line-height: 1.6;
+}
+
+.consult-avatar {
+  width: 5rem;
+  height: 5rem;
+  font-size: 1.4rem;
+}
+
+.consult-actions {
+  justify-content: center;
+}
+
+.consult-side {
+  background: var(--surface);
+  color: var(--ink);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.consult-side-head {
+  padding: 1rem 1.1rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.consult-side-head h2 {
+  font-size: 1.05rem;
+}
+
+.consult-side-head p {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+}
+
+.consult-chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.consult-chat-log {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem 1.1rem;
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+}
+
+.consult-chat .chat-text small {
+  display: block;
+  font-size: 0.68rem;
+  opacity: 0.7;
+  margin-bottom: 0.2rem;
+}
+
+.consult-chat .msg-composer {
+  padding: 0.75rem 1rem 1rem;
+}
+
+.consult-chat .msg-quick {
+  padding: 0 1rem;
+}
+
+.msg-panel .consult-chat {
+  min-height: 52vh;
+}
+
+@media (min-width: 960px) {
+  .consult-shell {
+    grid-template-columns: 1fr 360px;
+  }
+}
+
 @media (max-width: 720px) {
   .demo-notice { left: 0.6rem; right: 0.6rem; max-width: none; bottom: 4.8rem; }
 }
