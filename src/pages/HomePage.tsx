@@ -116,7 +116,18 @@ export function HomePage() {
           </div>
 
           <div className="hero-visual">
-            <img src="/assets/header.png" alt={text('common.brand')} />
+            <video
+              className="hero-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster="/assets/header.png"
+              aria-label={text('common.brand')}
+            >
+              <source src="/assets/hero-doctor.mp4" type="video/mp4" />
+            </video>
+            <img className="hero-fallback" src="/assets/header.png" alt={text('common.brand')} />
           </div>
         </div>
       </section>
