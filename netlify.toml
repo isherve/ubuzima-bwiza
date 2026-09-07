@@ -12,8 +12,8 @@
   status = 200
 
 [[redirects]]
-  from = "/api/contact"
-  to = "/.netlify/functions/contact"
+  from = "/api/consult-chat"
+  to = "/.netlify/functions/consult-chat"
   status = 200
 
 [[redirects]]

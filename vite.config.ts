@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { aiApiPlugin } from './plugins/aiApi.ts'
 import { contactApiPlugin } from './plugins/contactApi.ts'
+import { consultApiPlugin } from './plugins/consultApi.ts'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -16,7 +17,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: githubPages ? '/ubuzima-bwiza/' : '/',
-    plugins: [react(), aiApiPlugin(), contactApiPlugin()],
+    plugins: [react(), aiApiPlugin(), contactApiPlugin(), consultApiPlugin()],
     server: {
       port: 5173,
       host: true,

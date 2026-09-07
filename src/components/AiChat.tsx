@@ -2,6 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { askHealthAi, type AiChatMessage, type AiDoctorSuggestion } from '../lib/aiClient'
+import { useAuth } from '../context/AuthContext'
+import { ConsultChat } from './ConsultChat'
+import { videoVisitPath } from '../lib/videoVisit'
 
 type Bubble = {
   role: 'user' | 'ai' | 'doctor' | 'support'
@@ -15,7 +18,8 @@ type Thread = {
   id: string
   title: string
   subtitle: string
-  kind: 'ai' | 'doctor' | 'support'
+  kind: 'ai' | 'doctor' | 'support' | 'consult'
+  appointmentId?: string
 }
 
 const threads: Thread[] = [
@@ -262,7 +266,20 @@ export function AiChat({
 
 /** Full Messages inbox with AI as the primary chat thread. */
 export function MessagesChat() {
-  const [activeId, setActiveId] = useState('ai')
+  const { user, appointments } = useAuth()
+  const consultThreads: Thread[] = (appointments ?? [])
+    .filter((apt) => apt.type === 'video' && (user?.role !== 'patient' || apt.patientName === user.name))
+    .filter((apt) => user?.role !== 'doctor' || apt.doctorName === user.name || apt.doctorId === 'doc1')
+    .map((apt) => ({
+      id: `consult-${apt.id}`,
+      title: user?.role === 'patient' ? apt.doctorName : apt.patientName,
+      subtitle: `${apt.date} at ${apt.time} · Video visit`,
+      kind: 'consult' as const,
+      appointmentId: apt.id,
+    }))
+
+  const inboxThreads = [...consultThreads, ...threads.filter((thread) => thread.id !== 'doc-mugabo')]
+  const [activeId, setActiveId] = useState(inboxThreads[0]?.id ?? 'ai')
   const [inbox, setInbox] = useState<Record<string, Bubble[]>>(seedMessages)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -270,8 +287,8 @@ export function MessagesChat() {
   const scroller = useRef<HTMLDivElement>(null)
 
   const active = useMemo(
-    () => threads.find((t) => t.id === activeId) ?? threads[0],
-    [activeId],
+    () => inboxThreads.find((t) => t.id === activeId) ?? inboxThreads[0] ?? threads[0],
+    [activeId, inboxThreads],
   )
   const bubbles = inbox[activeId] ?? []
 
@@ -380,7 +397,7 @@ export function MessagesChat() {
             {mode === 'llm' ? 'Live AI' : 'AI ready'}
           </span>
         </div>
-        {threads.map((thread) => (
+        {inboxThreads.map((thread) => (
           <button
             key={thread.id}
             type="button"
@@ -399,7 +416,14 @@ export function MessagesChat() {
             <h3>{active.title}</h3>
             <p>{active.subtitle}</p>
           </div>
-          {active.kind !== 'ai' ? (
+          {active.kind === 'consult' && active.appointmentId ? (
+            <Link
+              to={videoVisitPath(active.appointmentId)}
+              className="btn btn-primary"
+            >
+              {user?.role === 'doctor' ? 'Talk with patient' : 'Talk with doctor'}
+            </Link>
+          ) : active.kind !== 'ai' ? (
             <button
               type="button"
               className="btn btn-outline"
@@ -411,6 +435,10 @@ export function MessagesChat() {
           ) : null}
         </header>
 
+        {active.kind === 'consult' && active.appointmentId && user ? (
+          <ConsultChat appointmentId={active.appointmentId} user={user} compact />
+        ) : (
+          <>
         {active.kind === 'ai' ? (
           <div className="quick-prompts msg-quick">
             {quickPrompts.map((prompt) => (
@@ -458,6 +486,8 @@ export function MessagesChat() {
             Send
           </button>
         </form>
+          </>
+        )}
       </section>
     </div>
   )
