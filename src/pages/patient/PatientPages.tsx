@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import { medications, records } from '../../data'
 import { downloadAppointmentIcs } from '../../lib/calendar'
+import { JoinVideoButton } from '../../components/JoinVideoButton'
 import { askHealthAi } from '../../lib/aiClient'
 import {
   appointmentsTableHtml,
@@ -64,6 +65,7 @@ export function PatientAppointmentsPage() {
               <div className="row-actions">
                 <StatusBadge status={apt.status} />
                 <StatusBadge status={apt.paymentStatus ?? 'unpaid'} />
+                <JoinVideoButton apt={apt} />
                 {apt.paymentStatus !== 'paid' ? (
                   <Link to={`/pay/${apt.id}`} className="btn btn-primary">
                     Pay

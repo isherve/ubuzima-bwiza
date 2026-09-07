@@ -32,8 +32,14 @@ export function downloadAppointmentIcs(apt: Appointment) {
     `DTSTAMP:${start}`,
     `DTSTART;TZID=Africa/Kigali:${start}`,
     `SUMMARY:Ubuzima Bwiza — ${apt.doctorName}`,
-    `DESCRIPTION:${apt.specialty} (${apt.type}) visit. Amount: ${apt.amount ?? 0} RWF.`,
-    'LOCATION:Rwanda / Ubuzima Bwiza',
+    `DESCRIPTION:${apt.specialty} (${apt.type}) visit. Amount: ${apt.amount ?? 0} RWF.${
+      apt.type === 'video'
+        ? ` Join video: ${typeof window === 'undefined' ? '' : window.location.origin}/visit/${apt.id}`
+        : ''
+    }`,
+    apt.type === 'video'
+      ? `LOCATION:${typeof window === 'undefined' ? 'Ubuzima Bwiza video visit' : `${window.location.origin}/visit/${apt.id}`}`
+      : 'LOCATION:Rwanda / Ubuzima Bwiza',
     'END:VEVENT',
     'END:VCALENDAR',
   ].join('\r\n')

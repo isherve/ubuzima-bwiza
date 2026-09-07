@@ -8,6 +8,7 @@ const FAQS = [
   ['help.q4', 'help.a4'],
   ['help.q5', 'help.a5'],
   ['help.q6', 'help.a6'],
+  ['help.q7', 'help.a7'],
 ] as const
 
 export function HelpPage() {

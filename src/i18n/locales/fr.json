@@ -308,6 +308,8 @@
     "q5": "Que faire en cas d'urgence ?",
     "a5": "N'attendez pas un chat en ligne. Appelez le 112 ou le SAMU 912, ou allez immédiatement à l'hôpital le plus proche.",
     "q6": "Comment mes données sont-elles protégées ?",
-    "a6": "Les informations de santé sont protégées par un accès selon le rôle, des connexions chiffrées et un hébergement responsable. Seuls les utilisateurs autorisés de votre parcours de soins peuvent consulter vos dossiers."
+    "a6": "Les informations de santé sont protégées par un accès selon le rôle, des connexions chiffrées et un hébergement responsable. Seuls les utilisateurs autorisés de votre parcours de soins peuvent consulter vos dossiers.",
+    "q7": "Comment fonctionnent les visites vidéo ?",
+    "a7": "Réservez une consultation vidéo, attendez l'approbation du médecin, puis cliquez sur Rejoindre. Patient et médecin entrent dans la même salle. En urgence, appelez le 112 ou le SAMU 912."
   }
 }
