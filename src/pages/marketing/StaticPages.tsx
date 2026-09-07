@@ -4,6 +4,7 @@ import { useAppText } from '../../context/ContentContext'
 import { useToast } from '../../context/ToastContext'
 
 const CONTACT_INBOX = 'ishimwehervin10@gmail.com'
+const CONTACT_PHONES = ['0790277611', '0781011343'] as const
 
 const ABOUT_FEATURES = [
   ['home.feature1Title', 'home.feature1Body'],
@@ -108,8 +109,11 @@ export function ContactPage() {
           <div className="feature">
             <h3>{text('contact.infoTitle')}</h3>
             <p>{text('contact.address')}</p>
-            <p>{text('contact.phone')}</p>
-            <p>{text('contact.emergency')}</p>
+            {CONTACT_PHONES.map((phone) => (
+              <p key={phone}>
+                <a href={`tel:+250${phone.slice(1)}`}>{phone}</a>
+              </p>
+            ))}
             <p>
               <a href={`mailto:${CONTACT_INBOX}`}>{CONTACT_INBOX}</a>
             </p>
