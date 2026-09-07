@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { Plugin } from 'vite'
-import { parseContactPayload, sendContactEmail } from '../server/contact.ts'
+import { originFromHeaders, parseContactPayload, sendContactEmail } from '../server/contact.ts'
 
 function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -42,7 +42,7 @@ async function handleContactRequest(req: IncomingMessage, res: ServerResponse) {
     return
   }
 
-  await sendContactEmail(payload)
+  await sendContactEmail(payload, originFromHeaders(req.headers as Record<string, string | string[] | undefined>))
   sendJson(res, 200, { success: true })
 }
 
