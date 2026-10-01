@@ -268,7 +268,7 @@ export function PayAppointmentPage() {
     setError('')
     const delay = method === 'cash' ? 600 : 1600
     window.setTimeout(() => {
-      const result = payAppointment(latest.id, method)
+      void payAppointment(latest.id, method).then((result) => {
       setLoading(false)
       if (!result.ok) {
         setError(result.message)
@@ -277,6 +277,7 @@ export function PayAppointmentPage() {
       }
       setReceipt(result.receiptId ?? '')
       setStep('done')
+      })
     }, delay)
   }
 

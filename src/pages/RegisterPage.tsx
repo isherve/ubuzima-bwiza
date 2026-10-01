@@ -19,7 +19,7 @@ export function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
 
-  const onSubmit = (event: FormEvent) => {
+  const onSubmit = async (event: FormEvent) => {
     event.preventDefault()
     if (password.length < 8) {
       setError('Use at least 8 characters for a stronger password.')
@@ -29,7 +29,7 @@ export function RegisterPage() {
       setError('Passwords do not match.')
       return
     }
-    const result = register({ name: fullName, email, password, role })
+    const result = await register({ name: fullName, email, password, role })
     if (!result.ok) {
       setError(result.message)
       return

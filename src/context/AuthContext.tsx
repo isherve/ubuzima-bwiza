@@ -9,26 +9,21 @@ import {
 } from 'react'
 import {
   dashboardPath,
-  demoUsers,
-  doctors,
-  initialAppointments,
   type Appointment,
   type PaymentMethod,
   type Role,
   type User,
 } from '../data'
-import i18n from '../i18n'
+import { apiRequest, authToken, setAuthToken } from '../lib/session'
+
+type AuthResult = { ok: boolean; message: string; role?: Role }
 
 type AuthContextValue = {
+  ready: boolean
   user: User | null
   appointments: Appointment[]
-  login: (email: string, password: string) => { ok: boolean; message: string; role?: Role }
-  register: (input: {
-    name: string
-    email: string
-    password: string
-    role: Role
-  }) => { ok: boolean; message: string }
+  login: (email: string, password: string) => Promise<AuthResult>
+  register: (input: { name: string; email: string; password: string; role: Role }) => Promise<AuthResult>
   logout: () => void
   bookAppointment: (input: {
     doctorId: string
@@ -36,156 +31,132 @@ type AuthContextValue = {
     time: string
     type: 'in-person' | 'video'
     notes?: string
-  }) => { ok: boolean; message: string; appointmentId?: string }
+  }) => Promise<{ ok: boolean; message: string; appointmentId?: string }>
   updateAppointmentStatus: (id: string, status: Appointment['status']) => void
-  payAppointment: (
-    id: string,
-    method: PaymentMethod,
-  ) => { ok: boolean; message: string; receiptId?: string }
+  payAppointment: (id: string, method: PaymentMethod) => Promise<{ ok: boolean; message: string; receiptId?: string }>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
-const USER_KEY = 'ub_user'
-const APT_KEY = 'ub_appointments'
 
-function normalizeAppointment(raw: Partial<Appointment> & { id: string }): Appointment {
-  const doctor = doctors.find((d) => d.id === raw.doctorId || d.name === raw.doctorName)
+function asUser(raw: User & { phone?: string | null; specialty?: string | null; hospital?: string | null }): User {
   return {
     id: raw.id,
-    doctorId: raw.doctorId ?? doctor?.id ?? 'doc1',
-    doctorName: raw.doctorName ?? doctor?.name ?? 'Doctor',
-    specialty: raw.specialty ?? doctor?.specialty ?? 'General practitioner',
-    patientName: raw.patientName ?? 'Patient',
-    date: raw.date ?? '',
-    time: raw.time ?? '',
-    status: raw.status ?? 'pending',
-    type: raw.type ?? 'video',
-    notes: raw.notes,
-    amount: raw.amount ?? doctor?.fee ?? 15000,
-    paymentStatus: raw.paymentStatus ?? 'unpaid',
-    paymentMethod: raw.paymentMethod,
-    paidAt: raw.paidAt,
-    receiptId: raw.receiptId,
+    name: raw.name,
+    email: raw.email,
+    role: raw.role,
+    phone: raw.phone || undefined,
+    specialty: raw.specialty || undefined,
+    hospital: raw.hospital || undefined,
   }
 }
 
+function asAppointment(raw: Appointment & { notes?: string | null }): Appointment {
+  return { ...raw, notes: raw.notes || undefined, paymentMethod: raw.paymentMethod || undefined, paidAt: raw.paidAt || undefined, receiptId: raw.receiptId || undefined }
+}
+
+async function loadAppointments() {
+  const result = await apiRequest<{ appointments?: Appointment[] }>('/api/appointments')
+  return (result.data.appointments ?? []).map(asAppointment)
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    const raw = localStorage.getItem(USER_KEY) ?? localStorage.getItem('ohl_user')
-    return raw ? (JSON.parse(raw) as User) : null
-  })
-  const [appointments, setAppointments] = useState<Appointment[]>(() => {
-    const raw = localStorage.getItem(APT_KEY) ?? localStorage.getItem('ohl_appointments')
-    if (!raw) return initialAppointments
-    try {
-      const parsed = JSON.parse(raw) as Appointment[]
-      return parsed.map((a) => normalizeAppointment(a))
-    } catch {
-      return initialAppointments
+  const [ready, setReady] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [appointments, setAppointments] = useState<Appointment[]>([])
+
+  useEffect(() => {
+    const token = authToken()
+    if (!token) {
+      setReady(true)
+      return
     }
-  })
-
-  useEffect(() => {
-    if (user) localStorage.setItem(USER_KEY, JSON.stringify(user))
-    else localStorage.removeItem(USER_KEY)
-  }, [user])
-
-  useEffect(() => {
-    localStorage.setItem(APT_KEY, JSON.stringify(appointments))
-  }, [appointments])
-
-  const login = useCallback((email: string, password: string) => {
-    const found = demoUsers.find(
-      (u) => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password,
-    )
-    if (!found) return { ok: false, message: i18n.t('auth.invalidCredentials') }
-    const { password: _pw, ...safe } = found
-    setUser(safe)
-    return { ok: true, message: i18n.t('auth.loginSuccess'), role: safe.role }
+    void apiRequest<{ user?: User }>('/api/auth/session')
+      .then(async (result) => {
+        if (!result.ok || !result.data.user) {
+          setAuthToken(null)
+          return
+        }
+        setUser(asUser(result.data.user))
+        setAppointments(await loadAppointments())
+      })
+      .finally(() => setReady(true))
   }, [])
 
-  const register = useCallback(
-    (input: { name: string; email: string; password: string; role: Role }) => {
-      if (demoUsers.some((u) => u.email.toLowerCase() === input.email.toLowerCase())) {
-        return { ok: false, message: 'An account with this email already exists. Try logging in.' }
+  const login = useCallback(async (email: string, password: string) => {
+    const result = await apiRequest<{ ok?: boolean; message?: string; token?: string; user?: User; role?: Role }>(
+      '/api/auth/login',
+      { method: 'POST', body: JSON.stringify({ email, password }) },
+    )
+    if (!result.ok || !result.data.token || !result.data.user) {
+      return { ok: false, message: result.data.message || 'Invalid email or password.' }
+    }
+    setAuthToken(result.data.token)
+    setUser(asUser(result.data.user))
+    setAppointments(await loadAppointments())
+    return { ok: true, message: result.data.message || 'Welcome back.', role: result.data.user.role }
+  }, [])
+
+  const register = useCallback(async (input: { name: string; email: string; password: string; role: Role }) => {
+    const result = await apiRequest<{ ok?: boolean; message?: string; token?: string; user?: User }>(
+      '/api/auth/register',
+      { method: 'POST', body: JSON.stringify(input) },
+    )
+    if (!result.ok || !result.data.token || !result.data.user) {
+      return { ok: false, message: result.data.message || 'Could not create the account.' }
+    }
+    setAuthToken(result.data.token)
+    setUser(asUser(result.data.user))
+    setAppointments([])
+    return { ok: true, message: result.data.message || 'Account created.', role: result.data.user.role }
+  }, [])
+
+  const logout = useCallback(() => {
+    setAuthToken(null)
+    setUser(null)
+    setAppointments([])
+  }, [])
+
+  const bookAppointment = useCallback(
+    async (input: { doctorId: string; date: string; time: string; type: 'in-person' | 'video'; notes?: string }) => {
+      const result = await apiRequest<{ ok?: boolean; message?: string; appointmentId?: string }>(
+        '/api/appointments',
+        { method: 'POST', body: JSON.stringify(input) },
+      )
+      if (!result.ok) return { ok: false, message: result.data.message || 'Could not book the appointment.' }
+      setAppointments(await loadAppointments())
+      return {
+        ok: true,
+        message: result.data.message || 'Appointment requested.',
+        appointmentId: result.data.appointmentId,
       }
-      const next: User = {
-        id: `u_${Date.now()}`,
-        name: input.name.trim(),
-        email: input.email.trim().toLowerCase(),
-        role: input.role,
-      }
-      demoUsers.push({ ...next, password: input.password })
-      setUser(next)
-      return { ok: true, message: 'Account created.' }
     },
     [],
   )
 
-  const logout = useCallback(() => setUser(null), [])
-
-  const bookAppointment = useCallback(
-    (input: {
-      doctorId: string
-      date: string
-      time: string
-      type: 'in-person' | 'video'
-      notes?: string
-    }) => {
-      if (!user) return { ok: false, message: i18n.t('auth.pleaseLogin') }
-      const doctor = doctors.find((d) => d.id === input.doctorId)
-      if (!doctor) return { ok: false, message: 'Doctor not found.' }
-      const apt: Appointment = {
-        id: `apt_${Date.now()}`,
-        doctorId: doctor.id,
-        doctorName: doctor.name,
-        specialty: doctor.specialty,
-        patientName: user.name,
-        date: input.date,
-        time: input.time,
-        status: 'pending',
-        type: input.type,
-        notes: input.notes,
-        amount: doctor.fee,
-        paymentStatus: 'unpaid',
-      }
-      setAppointments((prev) => [apt, ...prev])
-      return {
-        ok: true,
-        message: i18n.t('auth.appointmentRequested'),
-        appointmentId: apt.id,
-      }
-    },
-    [user],
-  )
-
   const updateAppointmentStatus = useCallback((id: string, status: Appointment['status']) => {
-    setAppointments((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
+    void apiRequest<{ appointment?: Appointment }>(`/api/appointments/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }).then(async (result) => {
+      if (result.ok) setAppointments(await loadAppointments())
+    })
   }, [])
 
-  const payAppointment = useCallback((id: string, method: PaymentMethod) => {
-    let receiptId = ''
-    setAppointments((prev) =>
-      prev.map((a) => {
-        if (a.id !== id) return a
-        if (a.paymentStatus === 'paid') return a
-        receiptId = `RCP-${Date.now().toString().slice(-8)}`
-        return {
-          ...a,
-          paymentStatus: 'paid',
-          paymentMethod: method,
-          paidAt: new Date().toISOString(),
-          receiptId,
-          status: a.status === 'pending' ? 'approved' : a.status,
-        }
-      }),
+  const payAppointment = useCallback(async (id: string, method: PaymentMethod) => {
+    const result = await apiRequest<{ ok?: boolean; message?: string; receiptId?: string }>(
+      `/api/appointments/${id}`,
+      { method: 'PATCH', body: JSON.stringify({ paymentMethod: method }) },
     )
-    if (!receiptId) return { ok: false, message: 'Payment already completed or appointment missing.' }
-    return { ok: true, message: i18n.t('auth.paymentSuccess'), receiptId }
+    if (!result.ok) {
+      return { ok: false, message: result.data.message || 'Payment already completed or appointment missing.' }
+    }
+    setAppointments(await loadAppointments())
+    return { ok: true, message: result.data.message || 'Payment received.', receiptId: result.data.receiptId }
   }, [])
 
   const value = useMemo(
     () => ({
+      ready,
       user,
       appointments,
       login,
@@ -195,16 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       updateAppointmentStatus,
       payAppointment,
     }),
-    [
-      user,
-      appointments,
-      login,
-      register,
-      logout,
-      bookAppointment,
-      updateAppointmentStatus,
-      payAppointment,
-    ],
+    [ready, user, appointments, login, register, logout, bookAppointment, updateAppointmentStatus, payAppointment],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

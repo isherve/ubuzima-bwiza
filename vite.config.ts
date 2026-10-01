@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { aiApiPlugin } from './plugins/aiApi.ts'
 import { contactApiPlugin } from './plugins/contactApi.ts'
 import { consultApiPlugin } from './plugins/consultApi.ts'
+import { dataApiPlugin } from './plugins/dataApi.ts'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -12,12 +13,14 @@ export default defineConfig(({ mode }) => {
   if (env.OPENAI_BASE_URL?.trim()) process.env.OPENAI_BASE_URL = env.OPENAI_BASE_URL.trim()
   if (env.AI_MODEL?.trim()) process.env.AI_MODEL = env.AI_MODEL.trim()
   if (env.CONTACT_TO?.trim()) process.env.CONTACT_TO = env.CONTACT_TO.trim()
+  if (env.DATABASE_URL?.trim()) process.env.DATABASE_URL = env.DATABASE_URL.trim()
+  if (env.AUTH_SECRET?.trim()) process.env.AUTH_SECRET = env.AUTH_SECRET.trim()
 
   const githubPages = process.env.GITHUB_PAGES === 'true'
 
   return {
     base: githubPages ? '/ubuzima-bwiza/' : '/',
-    plugins: [react(), aiApiPlugin(), contactApiPlugin(), consultApiPlugin()],
+    plugins: [react(), dataApiPlugin(), aiApiPlugin(), contactApiPlugin(), consultApiPlugin()],
     server: {
       port: 5173,
       host: true,

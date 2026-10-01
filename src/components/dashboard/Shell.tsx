@@ -58,7 +58,8 @@ function linksFor(role: Role) {
 }
 
 export function RequireAuth({ roles }: { roles?: Role[] }) {
-  const { user } = useAuth()
+  const { user, ready } = useAuth()
+  if (!ready) return null
   if (!user) return <Navigate to="/login" replace />
   if (roles && !roles.includes(user.role)) {
     return <Navigate to={dashboardPath(user.role)} replace />
@@ -67,8 +68,9 @@ export function RequireAuth({ roles }: { roles?: Role[] }) {
 }
 
 export function DashboardShell({ titleKey }: { titleKey: string }) {
-  const { user, logout } = useAuth()
+  const { user, logout, ready } = useAuth()
   const { t } = useTranslation()
+  if (!ready) return null
   if (!user) return <Navigate to="/login" replace />
   const links = linksFor(user.role)
 

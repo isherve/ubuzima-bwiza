@@ -131,6 +131,24 @@ export function AiChat({
   const scroller = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const token = localStorage.getItem('ub_token')
+    if (!token) return
+    void fetch('/api/ai/history', { headers: { Authorization: `Bearer ${token}` } })
+      .then((response) => response.json())
+      .then((data: { messages?: Array<{ role: string; content: string }> }) => {
+        if (!data.messages?.length) return
+        setChat(
+          data.messages.map((message) => ({
+            role: message.role === 'user' ? 'user' : 'ai',
+            text: message.content,
+            time: 'Saved',
+          })),
+        )
+      })
+      .catch(() => undefined)
+  }, [])
+
+  useEffect(() => {
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: 'smooth' })
   }, [chat, loading])
 

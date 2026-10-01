@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { handleAiChat, type ChatMessage } from '../../server/aiChat.js'
+import { rememberAiTurn } from '../../server/records.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') {
@@ -16,6 +17,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
     const messages = Array.isArray(body?.messages) ? (body.messages as ChatMessage[]).slice(-12) : []
     const result = await handleAiChat(messages)
+    const lastUser = [...messages].reverse().find((message) => message.role === 'user')?.content || ''
+    await rememberAiTurn(req.headers.authorization, lastUser, result.reply)
     res.status(200).json(result)
   } catch {
     res.status(400).json({ error: 'Invalid request body' })

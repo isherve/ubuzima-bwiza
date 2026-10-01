@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { Plugin } from 'vite'
 import { handleAiChat, type ChatMessage } from '../server/aiChat.ts'
+import { rememberAiTurn } from '../server/records.ts'
 
 function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -41,6 +42,9 @@ async function handleAiRequest(req: IncomingMessage, res: ServerResponse) {
     const body = JSON.parse(raw || '{}') as { messages?: ChatMessage[] }
     const messages = Array.isArray(body.messages) ? body.messages.slice(-12) : []
     const result = await handleAiChat(messages)
+    const lastUser = [...messages].reverse().find((message) => message.role === 'user')?.content || ''
+    const auth = typeof req.headers.authorization === 'string' ? req.headers.authorization : undefined
+    await rememberAiTurn(auth, lastUser, result.reply)
     sendJson(res, 200, result)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Invalid request body'

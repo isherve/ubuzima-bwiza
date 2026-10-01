@@ -10,12 +10,13 @@ import {
 
 export function VideoVisitPage() {
   const { id = '' } = useParams()
-  const { user, appointments } = useAuth()
+  const { user, appointments, ready } = useAuth()
   const apt = appointments.find((item) => item.id === id)
   const back = appointmentsBackPath(user?.role)
   const [live, setLive] = useState(false)
   const [withVideo, setWithVideo] = useState(true)
 
+  if (!ready) return null
   if (!user) return <Navigate to="/login" replace />
   if (!apt || !canAccessVideoVisit(user, apt)) {
     return (

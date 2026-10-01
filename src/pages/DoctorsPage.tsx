@@ -153,7 +153,7 @@ export function BookAppointmentPage() {
       navigate('/login')
       return
     }
-    const result = bookAppointment({ doctorId: doctor.id, date, time, type, notes })
+    void bookAppointment({ doctorId: doctor.id, date, time, type, notes }).then((result) => {
     setMessage(result.message)
     if (result.ok) {
       window.setTimeout(
@@ -161,6 +161,7 @@ export function BookAppointmentPage() {
         700,
       )
     }
+    })
   }
 
   return (

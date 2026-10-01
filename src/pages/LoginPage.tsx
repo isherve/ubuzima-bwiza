@@ -18,15 +18,14 @@ export function LoginPage() {
     event.preventDefault()
     setLoading(true)
     setError('')
-    window.setTimeout(() => {
-      const result = login(email, password)
+    void login(email, password).then((result) => {
       setLoading(false)
       if (!result.ok || !result.role) {
         setError(result.message)
         return
       }
       navigate(dashboardPath(result.role))
-    }, 400)
+    })
   }
 
   return (

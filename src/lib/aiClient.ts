@@ -20,9 +20,13 @@ export type AiChatResponse = {
 }
 
 export async function askHealthAi(messages: AiChatMessage[]): Promise<AiChatResponse> {
+  const token = localStorage.getItem('ub_token')
   const response = await fetch('/api/ai/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify({ messages }),
   })
 
