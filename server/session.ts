@@ -1,5 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
-import { ensureDatabase, findUserById, toPublicUser, type DbUser } from './db.ts'
+import { ensureDatabase, findUserById, toPublicUser, type DbUser } from './db.js'
 
 function secret() {
   return process.env.AUTH_SECRET?.trim() || 'ubuzima-bwiza-dev-secret'

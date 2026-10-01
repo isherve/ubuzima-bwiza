@@ -14,8 +14,8 @@ import {
   verifyPassword,
   type DbAppointment,
   type DbUser,
-} from './db.ts'
-import { newId, signToken, userFromAuthHeader } from './session.ts'
+} from './db.js'
+import { newId, signToken, userFromAuthHeader } from './session.js'
 
 type Result = { status: number; body: Record<string, unknown> }
 
