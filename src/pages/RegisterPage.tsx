@@ -4,11 +4,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
 import { dashboardPath, useAuth } from '../context/AuthContext'
+import { useAppText } from '../context/ContentContext'
 import type { Role } from '../data'
 
 const roles: Role[] = ['patient', 'doctor', 'hospital']
 
 export function RegisterPage() {
+  const { t } = useAppText()
   const { register } = useAuth()
   const navigate = useNavigate()
   const [role, setRole] = useState<Role>('patient')
@@ -22,11 +24,11 @@ export function RegisterPage() {
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault()
     if (password.length < 8) {
-      setError('Use at least 8 characters for a stronger password.')
+      setError(t('ui.passwordShort'))
       return
     }
     if (password !== confirm) {
-      setError('Passwords do not match.')
+      setError(t('ui.passwordMismatch'))
       return
     }
     const result = await register({ name: fullName, email, password, role })
@@ -49,20 +51,17 @@ export function RegisterPage() {
       <div className="auth-grid">
         <aside className="auth-aside">
           <div>
-            <p className="eyebrow">GET STARTED</p>
-            <h1>Create your Ubuzima Bwiza account</h1>
-            <p className="intro">
-              Join Rwanda&apos;s trusted medical network for telemedicine, appointments, and secure
-              health records.
-            </p>
+            <p className="eyebrow">{t('ui.getStarted')}</p>
+            <h1>{t('auth.createAccount')}</h1>
+            <p className="intro">{t('ui.registerIntro')}</p>
           </div>
         </aside>
         <main className="auth-main">
           <form className="auth-card" onSubmit={onSubmit}>
             <div>
-              <p className="eyebrow">Unified Access</p>
-              <h2>Create your Ubuzima Bwiza account</h2>
-              <p className="sub">Choose your role and register in a few steps.</p>
+              <p className="eyebrow">{t('ui.unifiedAccess')}</p>
+              <h2>{t('auth.createAccount')}</h2>
+              <p className="sub">{t('ui.chooseRole')}</p>
             </div>
             <div className="auth-form">
               <div className="role-tabs">
@@ -73,20 +72,20 @@ export function RegisterPage() {
                     className={role === item ? 'active' : ''}
                     onClick={() => setRole(item)}
                   >
-                    {item[0].toUpperCase() + item.slice(1)}
+                    {t(item === 'patient' ? 'auth.rolePatient' : item === 'doctor' ? 'auth.roleDoctor' : 'auth.roleHospital')}
                   </button>
                 ))}
               </div>
               <div className="field">
-                <label htmlFor="fullName">Full name *</label>
+                <label htmlFor="fullName">{t('ui.fullName')} *</label>
                 <input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
               </div>
               <div className="field">
-                <label htmlFor="email">Email *</label>
+                <label htmlFor="email">{t('ui.email')} *</label>
                 <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
               <div className="field">
-                <label htmlFor="password">Password *</label>
+                <label htmlFor="password">{t('ui.password')} *</label>
                 <div className="password-wrap">
                   <input
                     id="password"
@@ -97,12 +96,12 @@ export function RegisterPage() {
                     minLength={8}
                   />
                   <button type="button" className="password-toggle" onClick={() => setShowPassword((v) => !v)}>
-                    {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? t('ui.hide') : t('ui.show')}
                   </button>
                 </div>
               </div>
               <div className="field">
-                <label htmlFor="confirm">Confirm password *</label>
+                <label htmlFor="confirm">{t('ui.confirmPassword')} *</label>
                 <input
                   id="confirm"
                   type={showPassword ? 'text' : 'password'}
@@ -114,10 +113,10 @@ export function RegisterPage() {
               </div>
               {error ? <p className="error">{error}</p> : null}
               <button className="login-btn" type="submit">
-                Sign up
+                {t('auth.signUp')}
               </button>
               <p className="auth-switch">
-                Already have an account? <Link to="/login">Login here</Link>
+                {t('ui.haveAccount')} <Link to="/login">{t('ui.loginHere')}</Link>
               </p>
             </div>
           </form>

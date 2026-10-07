@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ConsultChat } from '../components/ConsultChat'
 import { useAuth } from '../context/AuthContext'
+import { useAppText } from '../context/ContentContext'
 import {
   appointmentsBackPath,
   canAccessVideoVisit,
@@ -9,6 +10,7 @@ import {
 } from '../lib/videoVisit'
 
 export function VideoVisitPage() {
+  const { t } = useAppText()
   const { id = '' } = useParams()
   const { user, appointments, ready } = useAuth()
   const apt = appointments.find((item) => item.id === id)
@@ -22,10 +24,10 @@ export function VideoVisitPage() {
     return (
       <section className="section">
         <div className="container prose">
-          <h1>Consultation unavailable</h1>
-          <p>This visit is not available, or it is an in-person appointment.</p>
+          <h1>{t('ui.consultUnavailable')}</h1>
+          <p>{t('ui.consultUnavailableBody')}</p>
           <Link to={back} className="btn btn-primary">
-            Back to appointments
+            {t('ui.backAppointments')}
           </Link>
         </div>
       </section>
@@ -36,13 +38,17 @@ export function VideoVisitPage() {
     return (
       <section className="section">
         <div className="container prose">
-          <h1>Waiting for approval</h1>
+          <h1>{t('ui.waitingApproval')}</h1>
           <p>
-            {apt.patientName} with {apt.doctorName} on {apt.date} at {apt.time}. Chat and video open
-            after the clinician approves the visit.
+            {t('ui.waitingBody', {
+              patient: apt.patientName,
+              doctor: apt.doctorName,
+              date: apt.date,
+              time: apt.time,
+            })}
           </p>
           <Link to={back} className="btn btn-primary">
-            Back to appointments
+            {t('ui.backAppointments')}
           </Link>
         </div>
       </section>
@@ -50,7 +56,6 @@ export function VideoVisitPage() {
   }
 
   const otherName = user.role === 'patient' || user.role === 'admin' ? apt.doctorName : apt.patientName
-  const otherRole = user.role === 'patient' ? 'your doctor' : 'the patient'
   const callUrl = jitsiVisitUrl(apt.id, user.name, withVideo)
 
   return (
@@ -58,20 +63,20 @@ export function VideoVisitPage() {
       <section className="consult-stage">
         <header className="visit-bar">
           <div>
-            <p className="pill">Private consultation</p>
-            <h1>Talk with {otherName}</h1>
+            <p className="pill">{t('ui.privateConsult')}</p>
+            <h1>{t('ui.talkWith', { name: otherName })}</h1>
             <p>
-              {apt.specialty} · {apt.date} at {apt.time}
+              {t(`specialties.${apt.specialty}`, { defaultValue: apt.specialty })} · {apt.date} {t('ui.at')} {apt.time}
             </p>
           </div>
           <div className="row-actions">
             {live ? (
               <button className="btn btn-outline" type="button" onClick={() => setLive(false)}>
-                Hide video
+                {t('ui.hideVideo')}
               </button>
             ) : null}
             <Link to={back} className="btn btn-primary">
-              End visit
+              {t('ui.endVisit')}
             </Link>
           </div>
         </header>
@@ -87,11 +92,8 @@ export function VideoVisitPage() {
         ) : (
           <div className="consult-waiting">
             <div className="avatar consult-avatar">{otherName.slice(0, 2).toUpperCase()}</div>
-            <h2>Ready to talk with {otherName}</h2>
-            <p>
-              Message {otherRole} on the right, then start video when both of you are ready. You stay
-              in the same private room.
-            </p>
+            <h2>{t('ui.readyTalk', { name: otherName })}</h2>
+            <p>{t('ui.readyBody')}</p>
             <div className="row-actions consult-actions">
               <button
                 className="btn btn-primary"
@@ -101,7 +103,7 @@ export function VideoVisitPage() {
                   setLive(true)
                 }}
               >
-                Start video call
+                {t('ui.startVideo')}
               </button>
               <button
                 className="btn btn-outline"
@@ -111,21 +113,18 @@ export function VideoVisitPage() {
                   setLive(true)
                 }}
               >
-                Join with chat only
+                {t('ui.chatOnly')}
               </button>
             </div>
-            <p className="visit-note">
-              Not for emergencies. Call 112 or SAMU 912 for chest pain, breathing trouble, or severe
-              bleeding.
-            </p>
+            <p className="visit-note">{t('ui.notEmergency')}</p>
           </div>
         )}
       </section>
 
       <aside className="consult-side">
         <div className="consult-side-head">
-          <h2>Messages</h2>
-          <p>You and {otherName} see this conversation.</p>
+          <h2>{t('ui.messages')}</h2>
+          <p>{t('ui.sharedChat', { name: otherName })}</p>
         </div>
         <ConsultChat appointmentId={apt.id} user={user} />
       </aside>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { askHealthAi, type AiChatMessage, type AiDoctorSuggestion } from '../lib/aiClient'
 import { useAuth } from '../context/AuthContext'
@@ -122,6 +123,7 @@ export function AiChat({
   subtitle = 'Preliminary guidance only. Not a replacement for a licensed clinician.',
   compact = false,
 }: AiChatProps) {
+  const { t } = useTranslation()
   const [chat, setChat] = useState<Bubble[]>(seedMessages.ai)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -205,18 +207,14 @@ export function AiChat({
           <p className="lead">{subtitle}</p>
         </div>
         <span className={`ai-mode ${mode === 'llm' ? 'live' : 'local'}`}>
-          {mode === 'llm' ? 'Live AI connected' : mode === 'local' ? 'Smart triage mode' : 'Ready'}
+          {mode === 'llm' ? t('ui.liveAi') : mode === 'local' ? t('ui.smartTriage') : t('ui.ready')}
         </span>
       </div>
 
       {!consented ? (
         <div className="ai-consent" role="dialog" aria-labelledby="ai-consent-title">
-          <h3 id="ai-consent-title">Before you use the AI assistant</h3>
-          <p>
-            This assistant offers preliminary guidance only. It is not a doctor, cannot diagnose, and
-            must not replace emergency services. If you have chest pain, trouble breathing, stroke
-            signs, or severe bleeding, call 112 / SAMU 912 or go to the nearest hospital immediately.
-          </p>
+          <h3 id="ai-consent-title">{t('ui.aiConsentTitle')}</h3>
+          <p>{t('ui.aiConsentBody')}</p>
           <button
             type="button"
             className="btn btn-primary"
@@ -225,7 +223,7 @@ export function AiChat({
               setConsented(true)
             }}
           >
-            I understand — continue
+            {t('ui.aiConsentContinue')}
           </button>
         </div>
       ) : null}
@@ -259,22 +257,22 @@ export function AiChat({
               ) : null}
             </div>
           ))}
-          {loading ? <div className="chat-bubble ai typing">Thinking…</div> : null}
+          {loading ? <div className="chat-bubble ai typing">{t('ui.thinking')}</div> : null}
         </div>
 
         <div className="field">
-          <label htmlFor={compact ? 'ai-prompt-mini' : 'ai-prompt'}>Message</label>
+          <label htmlFor={compact ? 'ai-prompt-mini' : 'ai-prompt'}>{t('ui.message')}</label>
           <input
             id={compact ? 'ai-prompt-mini' : 'ai-prompt'}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about symptoms, meds, or which doctor to book..."
+            placeholder={t('ui.askPlaceholder')}
             disabled={loading}
             required
           />
         </div>
         <button className="btn btn-primary" type="submit" disabled={loading}>
-          {loading ? 'Analyzing…' : 'Send'}
+          {loading ? t('ui.analyzing') : t('ui.send')}
         </button>
       </form>
       ) : null}
@@ -284,6 +282,7 @@ export function AiChat({
 
 /** Full Messages inbox with AI as the primary chat thread. */
 export function MessagesChat() {
+  const { t } = useTranslation()
   const { user, appointments } = useAuth()
   const consultThreads: Thread[] = (appointments ?? [])
     .filter((apt) => apt.type === 'video' && (user?.role !== 'patient' || apt.patientName === user.name))
@@ -291,7 +290,7 @@ export function MessagesChat() {
     .map((apt) => ({
       id: `consult-${apt.id}`,
       title: user?.role === 'patient' ? apt.doctorName : apt.patientName,
-      subtitle: `${apt.date} at ${apt.time} · Video visit`,
+      subtitle: `${apt.date} ${t('ui.at')} ${apt.time} · ${t('ui.videoShort')}`,
       kind: 'consult' as const,
       appointmentId: apt.id,
     }))
@@ -410,9 +409,9 @@ export function MessagesChat() {
     <div className="msg-layout">
       <aside className="msg-threads">
         <div className="msg-threads-head">
-          <h2>Messages</h2>
+          <h2>{t('ui.messages')}</h2>
           <span className={`ai-mode ${mode === 'llm' ? 'live' : 'local'}`}>
-            {mode === 'llm' ? 'Live AI' : 'AI ready'}
+            {mode === 'llm' ? t('ui.liveAiShort') : t('ui.aiReady')}
           </span>
         </div>
         {inboxThreads.map((thread) => (
@@ -423,7 +422,15 @@ export function MessagesChat() {
             onClick={() => setActiveId(thread.id)}
           >
             <strong>{thread.title}</strong>
-            <span>{thread.subtitle}</span>
+            <span>
+              {thread.id === 'ai'
+                ? t('ui.aiThread')
+                : thread.id === 'support'
+                  ? t('ui.supportThread')
+                  : thread.id === 'doc-mugabo'
+                    ? t('ui.cardioFollow')
+                    : thread.subtitle}
+            </span>
           </button>
         ))}
       </aside>
@@ -479,7 +486,7 @@ export function MessagesChat() {
               ) : null}
             </div>
           ))}
-          {loading ? <div className="chat-bubble ai typing">Thinking…</div> : null}
+          {loading ? <div className="chat-bubble ai typing">{t('ui.thinking')}</div> : null}
         </div>
 
         <form
@@ -494,14 +501,14 @@ export function MessagesChat() {
             onChange={(e) => setInput(e.target.value)}
             placeholder={
               active.kind === 'ai'
-                ? 'Ask AI about symptoms, meds, or specialists...'
-                : `Message ${active.title}...`
+                ? t('ui.askAiPlaceholder')
+                : t('ui.messageSomeone', { name: active.title })
             }
             disabled={loading}
             required
           />
           <button className="btn btn-primary" type="submit" disabled={loading}>
-            Send
+            {t('ui.send')}
           </button>
         </form>
           </>
@@ -512,6 +519,7 @@ export function MessagesChat() {
 }
 
 export function AiFloatingWidget() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   return (
@@ -519,18 +527,18 @@ export function AiFloatingWidget() {
       {open ? (
         <div className="ai-float-panel">
           <div className="ai-float-bar">
-            <strong>AI Assistant</strong>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Close AI">
-              Close
+            <strong>{t('nav.aiAssistant')}</strong>
+            <button type="button" onClick={() => setOpen(false)} aria-label={t('nav.closeMenu')}>
+              {t('ui.exit')}
             </button>
           </div>
           <div className="ai-float-body">
-            <AiChat compact title="Quick AI help" subtitle="Ask about symptoms or booking." />
+            <AiChat compact title={t('ui.quickAi')} subtitle={t('ui.quickAiSub')} />
           </div>
         </div>
       ) : null}
       <button type="button" className="ai-float-btn" onClick={() => setOpen((v) => !v)}>
-        {open ? 'Close' : 'AI Chat'}
+        {open ? t('ui.exit') : t('ai.floatLabel')}
       </button>
     </div>
   )

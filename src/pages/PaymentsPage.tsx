@@ -1,8 +1,11 @@
 ﻿import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { UssdSession } from '../components/UssdSession'
+import { WalletPrompt } from '../components/WalletPrompt'
 import { EmptyState, StatusBadge } from '../components/dashboard/Shell'
 import { useAuth } from '../context/AuthContext'
+import { useAppText } from '../context/ContentContext'
 import type { Appointment, PaymentMethod } from '../data'
 import {
   formatCardNumber,
@@ -18,27 +21,37 @@ import {
   appointmentReceiptHtml,
   downloadPrintableReport,
   formatRwf,
-  methodLabel,
 } from '../lib/reports'
+import { AT_SERVICE_CODE, phonePrefixMismatch, USSD_MERCHANT_CODE } from '../lib/ussd'
 
-const methods: Array<{ id: PaymentMethod; label: string; hint: string }> = [
-  { id: 'momo', label: 'MTN MoMo', hint: 'Approve the prompt on your MTN number' },
-  { id: 'airtel', label: 'Airtel Money', hint: 'Approve the prompt on your Airtel number' },
-  { id: 'card', label: 'Visa / Mastercard', hint: 'Pay securely by card' },
-  { id: 'cash', label: 'Pay at facility', hint: 'Settle at hospital reception' },
+const methods: Array<{ id: PaymentMethod; labelKey: string; hintKey: string }> = [
+  { id: 'momo', labelKey: 'payments.momo', hintKey: 'ui.momoHint' },
+  { id: 'airtel', labelKey: 'payments.airtel', hintKey: 'ui.airtelHint' },
+  { id: 'card', labelKey: 'ui.cardMethod', hintKey: 'ui.cardHint' },
+  { id: 'cash', labelKey: 'ui.cashMethod', hintKey: 'ui.cashHint' },
 ]
 
 const STEPS = [
-  { id: 'review', label: 'Invoice' },
-  { id: 'method', label: 'Method' },
-  { id: 'details', label: 'Details' },
-  { id: 'confirm', label: 'Pay' },
-  { id: 'done', label: 'Receipt' },
+  { id: 'review', labelKey: 'ui.stepInvoice' },
+  { id: 'method', labelKey: 'ui.stepMethod' },
+  { id: 'details', labelKey: 'ui.stepDetails' },
+  { id: 'confirm', labelKey: 'ui.stepPay' },
+  { id: 'done', labelKey: 'ui.stepReceipt' },
 ] as const
 
 type Step = (typeof STEPS)[number]['id']
 
+function payMethodName(method: PaymentMethod | undefined, translate: (key: string) => string) {
+  if (method === 'momo') return translate('payments.momo')
+  if (method === 'airtel') return translate('payments.airtel')
+  if (method === 'card') return translate('payments.card')
+  if (method === 'cash') return translate('payments.cash')
+  if (method === 'ussd') return translate('payments.ussd')
+  return ''
+}
+
 function CheckoutSteps({ current }: { current: Step }) {
+  const { t } = useAppText()
   const index = STEPS.findIndex((item) => item.id === current)
   return (
     <ol className="pay-steps" aria-label="Payment steps">
@@ -48,7 +61,7 @@ function CheckoutSteps({ current }: { current: Step }) {
           className={`pay-step${i === index ? ' current' : ''}${i < index ? ' done' : ''}`}
         >
           <span>{i + 1}</span>
-          {item.label}
+          {t(item.labelKey)}
         </li>
       ))}
     </ol>
@@ -56,45 +69,46 @@ function CheckoutSteps({ current }: { current: Step }) {
 }
 
 function InvoiceSummary({ apt }: { apt: Appointment }) {
+  const { t } = useAppText()
   return (
     <div className="pay-invoice">
       <div className="pay-invoice-head">
         <div>
           <p className="eyebrow">Ubuzima Bwiza</p>
-          <h3>Consultation invoice</h3>
+          <h3>{t('ui.consultationInvoice')}</h3>
         </div>
         <strong>{invoiceRef(apt.id)}</strong>
       </div>
       <dl className="pay-lines">
         <div>
-          <dt>Patient</dt>
+          <dt>{t('ui.patient')}</dt>
           <dd>{apt.patientName}</dd>
         </div>
         <div>
-          <dt>Clinician</dt>
+          <dt>{t('ui.clinician')}</dt>
           <dd>
             {apt.doctorName}
             <span>
-              {apt.specialty} · {apt.type === 'video' ? 'Video visit' : 'In-person'}
+              {t(`specialties.${apt.specialty}`, { defaultValue: apt.specialty })} · {apt.type === 'video' ? t('ui.videoShort') : t('ui.inPersonShort')}
             </span>
           </dd>
         </div>
         <div>
-          <dt>Schedule</dt>
+          <dt>{t('ui.schedule')}</dt>
           <dd>
-            {apt.date} at {apt.time}
+            {apt.date} {t('ui.at')} {apt.time}
           </dd>
         </div>
         <div>
-          <dt>Consultation</dt>
+          <dt>{t('ui.consultation')}</dt>
           <dd>{formatRwf(apt.amount)}</dd>
         </div>
         <div>
-          <dt>Service fee</dt>
+          <dt>{t('ui.serviceFee')}</dt>
           <dd>0 RWF</dd>
         </div>
         <div className="total">
-          <dt>Amount due</dt>
+          <dt>{t('ui.amountDue')}</dt>
           <dd>{formatRwf(apt.amount)}</dd>
         </div>
       </dl>
@@ -103,6 +117,7 @@ function InvoiceSummary({ apt }: { apt: Appointment }) {
 }
 
 export function PaymentsPage() {
+  const { t } = useAppText()
   const { user, appointments } = useAuth()
   const [params] = useSearchParams()
   const focusId = params.get('apt')
@@ -119,32 +134,32 @@ export function PaymentsPage() {
     <div className="stack">
       <div className="toolbar">
         <div>
-          <h2>Payments</h2>
+          <h2>{t('payments.title')}</h2>
           <p className="lead" style={{ marginBottom: 0 }}>
-            Secure checkout for consultations. Receipts stay in your account.
+            {t('ui.paymentsLead')}
           </p>
         </div>
       </div>
 
       <div className="pay-summary">
         <article>
-          <span>Amount due</span>
+          <span>{t('ui.amountDue')}</span>
           <strong>{formatRwf(dueTotal)}</strong>
         </article>
         <article>
-          <span>Paid</span>
+          <span>{t('ui.paid')}</span>
           <strong>{formatRwf(paidTotal)}</strong>
         </article>
         <article>
-          <span>Receipts</span>
+          <span>{t('ui.receipts')}</span>
           <strong>{paid.length}</strong>
         </article>
       </div>
 
-      <h3>Invoices due</h3>
+      <h3>{t('ui.invoicesDue')}</h3>
       <div className="table">
         {unpaid.length === 0 ? (
-          <EmptyState text="No unpaid invoices." />
+          <EmptyState text={t('ui.noUnpaid')} />
         ) : (
           unpaid.map((apt) => (
             <div className={`table-row${focusId === apt.id ? ' highlight-row' : ''}`} key={apt.id}>
@@ -153,13 +168,13 @@ export function PaymentsPage() {
                   {invoiceRef(apt.id)} · {formatRwf(apt.amount)}
                 </strong>
                 <p>
-                  {apt.doctorName} · {apt.date} at {apt.time} · {apt.specialty}
+                  {apt.doctorName} · {apt.date} {t('ui.at')} {apt.time} · {t(`specialties.${apt.specialty}`, { defaultValue: apt.specialty })}
                 </p>
               </div>
               <div className="row-actions">
                 <StatusBadge status={apt.paymentStatus} />
                 <Link to={`/pay/${apt.id}`} className="btn btn-primary">
-                  Pay invoice
+                  {t('ui.payInvoice')}
                 </Link>
               </div>
             </div>
@@ -167,10 +182,10 @@ export function PaymentsPage() {
         )}
       </div>
 
-      <h3>Paid receipts</h3>
+      <h3>{t('ui.paid')}</h3>
       <div className="table">
         {paid.length === 0 ? (
-          <EmptyState text="No paid receipts yet." />
+          <EmptyState text={t('ui.noReceipts')} />
         ) : (
           paid.map((apt) => (
             <div className="table-row" key={apt.id}>
@@ -179,27 +194,27 @@ export function PaymentsPage() {
                   {apt.receiptId} · {formatRwf(apt.amount)}
                 </strong>
                 <p>
-                  {apt.doctorName} · {methodLabel(apt.paymentMethod)}
+                  {apt.doctorName} · {payMethodName(apt.paymentMethod, t)}
                   {apt.paidAt ? ` · ${new Date(apt.paidAt).toLocaleString()}` : ''}
                 </p>
               </div>
               <div className="row-actions">
                 <StatusBadge status="paid" />
                 <Link to={`/pay/${apt.id}`} className="btn btn-outline">
-                  View receipt
+                  {t('ui.viewReceipt')}
                 </Link>
                 <button
                   type="button"
                   className="btn btn-outline"
                   onClick={() =>
                     downloadPrintableReport({
-                      title: 'Official payment receipt',
-                      subtitle: 'Ubuzima Bwiza · Digital health services',
+                      title: t('ui.receiptTitle'),
+                      subtitle: t('ui.receiptSubtitle'),
                       htmlBody: appointmentReceiptHtml(apt),
                     })
                   }
                 >
-                  Download
+                  {t('ui.download')}
                 </button>
               </div>
             </div>
@@ -211,12 +226,15 @@ export function PaymentsPage() {
 }
 
 export function PayAppointmentPage() {
+  const { t } = useAppText()
   const { id } = useParams()
   const { appointments, payAppointment, user } = useAuth()
   const apt = appointments.find((a) => a.id === id)
   const [step, setStep] = useState<Step>(apt?.paymentStatus === 'paid' ? 'done' : 'review')
   const [method, setMethod] = useState<PaymentMethod>('momo')
   const [phone, setPhone] = useState(user?.phone ?? '0781 011 343')
+  const [showUssd, setShowUssd] = useState(false)
+  const [payChannel, setPayChannel] = useState<'prompt' | 'ussd' | null>(null)
   const [cardName, setCardName] = useState(user?.name ?? '')
   const [cardNumber, setCardNumber] = useState('')
   const [expiry, setExpiry] = useState('')
@@ -225,7 +243,7 @@ export function PayAppointmentPage() {
   const [error, setError] = useState('')
   const [receipt, setReceipt] = useState(apt?.receiptId ?? '')
 
-  if (!apt) return <EmptyState text="Invoice not found." />
+  if (!apt) return <EmptyState text={t('ui.invoiceNotFound')} />
 
   const latest = appointments.find((a) => a.id === apt.id) ?? apt
   const paid = latest.paymentStatus === 'paid'
@@ -233,25 +251,25 @@ export function PayAppointmentPage() {
   const validateDetails = () => {
     if (method === 'momo' || method === 'airtel') {
       if (!isValidRwandanPhone(phone)) {
-        setError('Enter a valid Rwandan mobile money number, for example 0781 011 343.')
+        setError(t('ui.phoneInvalid'))
         return false
       }
     }
     if (method === 'card') {
       if (cardNumber.replace(/\D/g, '').length !== 16) {
-        setError('Enter a 16-digit card number.')
+        setError(t('ui.cardInvalid'))
         return false
       }
       if (cardName.trim().length < 3) {
-        setError('Enter the name on the card.')
+        setError(t('ui.cardNameInvalid'))
         return false
       }
       if (!isValidExpiry(expiry)) {
-        setError('Enter a valid expiry date (MM/YY).')
+        setError(t('ui.expiryInvalid'))
         return false
       }
       if (!isValidCvc(cvc)) {
-        setError('Enter a valid CVC.')
+        setError(t('ui.cvcInvalid'))
         return false
       }
     }
@@ -259,14 +277,15 @@ export function PayAppointmentPage() {
     return true
   }
 
-  const processPayment = () => {
+  const processPayment = (channel?: 'prompt' | 'ussd') => {
     if (paid) {
       setStep('done')
       return
     }
+    if (channel) setPayChannel(channel)
     setLoading(true)
     setError('')
-    const delay = method === 'cash' ? 600 : 1600
+    const delay = method === 'cash' ? 600 : channel === 'ussd' ? 800 : 1400
     window.setTimeout(() => {
       void payAppointment(latest.id, method).then((result) => {
       setLoading(false)
@@ -284,23 +303,31 @@ export function PayAppointmentPage() {
   const onDetailsNext = (event: FormEvent) => {
     event.preventDefault()
     if (!validateDetails()) return
+    setShowUssd(false)
     setStep('confirm')
   }
 
+  const walletNetwork = method === 'airtel' ? 'airtel' : 'mtn'
+  const formattedPhone = formatRwandanPhone(phone)
+  const walletName = method === 'airtel' ? t('payments.airtel') : t('payments.momo')
+  const prefixWarning =
+    (method === 'momo' || method === 'airtel') && phonePrefixMismatch(walletNetwork, phone)
+      ? t(walletNetwork === 'mtn' ? 'ui.prefixMtn' : 'ui.prefixAirtel')
+      : ''
   const methodHint =
-    method === 'momo'
-      ? `A collection request will be sent to ${formatRwandanPhone(phone)}.`
-      : method === 'airtel'
-        ? `An Airtel Money prompt will be sent to ${formatRwandanPhone(phone)}.`
-        : method === 'card'
-          ? `Card ${maskCard(cardNumber)} will be charged ${formatRwf(latest.amount)}.`
-          : 'Pay this invoice at hospital reception before your visit.'
+    method === 'momo' || method === 'airtel'
+      ? showUssd
+        ? t('ui.atDial', { code: AT_SERVICE_CODE, merchant: USSD_MERCHANT_CODE })
+        : t('ui.momoPrompt', { phone: formattedPhone })
+      : method === 'card'
+        ? t('ui.cardCharge', { card: maskCard(cardNumber), amount: formatRwf(latest.amount) })
+        : t('ui.cashHintLong')
 
   return (
     <div className="stack pay-checkout">
       <div>
-        <p className="pill">Secure checkout</p>
-        <h2>{paid ? 'Payment receipt' : 'Pay consultation'}</h2>
+        <p className="pill">{t('ui.secureCheckout')}</p>
+        <h2>{paid ? t('ui.paymentReceipt') : t('ui.payConsultation')}</h2>
       </div>
       <CheckoutSteps current={paid ? 'done' : step} />
 
@@ -309,10 +336,10 @@ export function PayAppointmentPage() {
           <InvoiceSummary apt={latest} />
           <div className="row-actions">
             <Link to="/my-appointments" className="btn btn-outline">
-              Back
+              {t('ui.back')}
             </Link>
             <button className="btn btn-primary" type="button" onClick={() => setStep('method')}>
-              Continue to payment
+              {t('ui.continuePayment')}
             </button>
           </div>
         </>
@@ -328,17 +355,17 @@ export function PayAppointmentPage() {
                 className={`pay-method${method === item.id ? ' active' : ''}`}
                 onClick={() => setMethod(item.id)}
               >
-                <strong>{item.label}</strong>
-                <span>{item.hint}</span>
+                <strong>{t(item.labelKey)}</strong>
+                <span>{t(item.hintKey)}</span>
               </button>
             ))}
           </div>
           <div className="row-actions">
             <button className="btn btn-outline" type="button" onClick={() => setStep('review')}>
-              Back
+              {t('ui.back')}
             </button>
             <button className="btn btn-primary" type="button" onClick={() => setStep('details')}>
-              Continue
+              {t('ui.continue')}
             </button>
           </div>
         </>
@@ -348,7 +375,7 @@ export function PayAppointmentPage() {
         <form className="search-card auth-form" onSubmit={onDetailsNext}>
           {method === 'momo' || method === 'airtel' ? (
             <div className="field">
-              <label htmlFor="phone">Mobile money number</label>
+              <label htmlFor="phone">{t('ui.mmNumber')}</label>
               <input
                 id="phone"
                 value={phone}
@@ -357,14 +384,15 @@ export function PayAppointmentPage() {
                 inputMode="tel"
                 required
               />
-              <p className="field-hint">Use the number registered for {methodLabel(method)}.</p>
+              <p className="field-hint">{t('ui.numberFor', { method: walletName })}</p>
+              {prefixWarning ? <p className="pay-warn">{prefixWarning}</p> : null}
             </div>
           ) : null}
 
           {method === 'card' ? (
             <>
               <div className="field">
-                <label htmlFor="cardName">Name on card</label>
+                <label htmlFor="cardName">{t('ui.nameOnCard')}</label>
                 <input
                   id="cardName"
                   value={cardName}
@@ -374,7 +402,7 @@ export function PayAppointmentPage() {
                 />
               </div>
               <div className="field">
-                <label htmlFor="card">Card number</label>
+                <label htmlFor="card">{t('ui.cardNumber')}</label>
                 <input
                   id="card"
                   value={cardNumber}
@@ -387,7 +415,7 @@ export function PayAppointmentPage() {
               </div>
               <div className="pay-card-row">
                 <div className="field">
-                  <label htmlFor="exp">Expiry</label>
+                  <label htmlFor="exp">{t('ui.expiry')}</label>
                   <input
                     id="exp"
                     value={expiry}
@@ -398,7 +426,7 @@ export function PayAppointmentPage() {
                   />
                 </div>
                 <div className="field">
-                  <label htmlFor="cvc">CVC</label>
+                  <label htmlFor="cvc">{t('ui.cvc')}</label>
                   <input
                     id="cvc"
                     value={cvc}
@@ -415,18 +443,17 @@ export function PayAppointmentPage() {
 
           {method === 'cash' ? (
             <p className="lead">
-              A payment voucher will be created. Present invoice {invoiceRef(latest.id)} at reception
-              with {formatRwf(latest.amount)}.
+              {t('ui.cashVoucher', { invoice: invoiceRef(latest.id), amount: formatRwf(latest.amount) })}
             </p>
           ) : null}
 
           {error ? <p className="error">{error}</p> : null}
           <div className="row-actions">
             <button className="btn btn-outline" type="button" onClick={() => setStep('method')}>
-              Back
+              {t('ui.back')}
             </button>
             <button className="btn btn-primary" type="submit">
-              Review and pay
+              {t('ui.reviewPay')}
             </button>
           </div>
         </form>
@@ -436,34 +463,71 @@ export function PayAppointmentPage() {
         <div className="search-card auth-form">
           <InvoiceSummary apt={latest} />
           <p className="lead">{methodHint}</p>
+          {method === 'momo' || method === 'airtel' ? (
+            showUssd ? (
+              <UssdSession
+                network={walletNetwork}
+                phone={formattedPhone}
+                invoice={invoiceRef(latest.id)}
+                amountLabel={formatRwf(latest.amount)}
+                appointmentId={latest.id}
+                busy={loading}
+                onExit={() => setShowUssd(false)}
+                onComplete={() => processPayment('ussd')}
+              />
+            ) : (
+              <WalletPrompt
+                network={walletNetwork}
+                phone={formattedPhone}
+                invoice={invoiceRef(latest.id)}
+                amountLabel={formatRwf(latest.amount)}
+                busy={loading}
+                onApproved={() => processPayment('prompt')}
+                onUseUssd={() => setShowUssd(true)}
+              />
+            )
+          ) : null}
           {error ? <p className="error">{error}</p> : null}
           {loading ? (
             <p className="success">
               {method === 'card'
-                ? 'Authorising card payment…'
+                ? t('ui.authorising')
                 : method === 'cash'
-                  ? 'Recording facility payment…'
-                  : 'Waiting for mobile money approval…'}
+                  ? t('ui.recordingCash')
+                  : payChannel === 'ussd'
+                    ? t('ui.confirmingUssd')
+                    : t('ui.waitingPhone')}
             </p>
           ) : null}
           <div className="row-actions">
-            <button className="btn btn-outline" type="button" disabled={loading} onClick={() => setStep('details')}>
-              Back
+            <button
+              className="btn btn-outline"
+              type="button"
+              disabled={loading}
+              onClick={() => {
+                setShowUssd(false)
+                setStep('details')
+              }}
+            >
+              {t('ui.back')}
             </button>
-            <button className="btn btn-primary" type="button" disabled={loading} onClick={processPayment}>
-              {loading ? 'Processing…' : `Pay ${formatRwf(latest.amount)}`}
-            </button>
+            {method === 'momo' || method === 'airtel' ? null : (
+              <button className="btn btn-primary" type="button" disabled={loading} onClick={() => processPayment()}>
+                {loading ? t('ui.processing') : t('ui.payAmount', { amount: formatRwf(latest.amount) })}
+              </button>
+            )}
           </div>
-          <p className="field-hint">Encrypted connection · Amounts in RWF · Receipt issued immediately</p>
+          <p className="field-hint">{t('ui.encrypted')}</p>
         </div>
       ) : null}
 
       {step === 'done' || paid ? (
         <div className="search-card auth-form">
-          <p className="success">Payment complete. Keep this receipt for your records.</p>
+          <p className="success">{t('ui.paymentComplete')}</p>
           <InvoiceSummary apt={appointments.find((a) => a.id === latest.id) ?? latest} />
           <p className="lead">
-            Receipt {receipt || latest.receiptId || invoiceRef(latest.id)} · {methodLabel(latest.paymentMethod ?? method)}
+            {t('ui.receipt')} {receipt || latest.receiptId || invoiceRef(latest.id)} · {payMethodName(latest.paymentMethod ?? method, t)}
+            {payChannel === 'ussd' ? ` · ${t('ui.viaUssd')}` : payChannel === 'prompt' ? ` · ${t('ui.viaPrompt')}` : ''}
           </p>
           <div className="row-actions">
             <button
@@ -471,25 +535,25 @@ export function PayAppointmentPage() {
               className="btn btn-primary"
               onClick={() =>
                 downloadPrintableReport({
-                  title: 'Official payment receipt',
-                  subtitle: 'Ubuzima Bwiza · Digital health services',
+                  title: t('ui.receiptTitle'),
+                  subtitle: t('ui.receiptSubtitle'),
                   htmlBody: appointmentReceiptHtml(appointments.find((a) => a.id === latest.id) ?? latest),
                 })
               }
             >
-              Download receipt
+              {t('ui.downloadReceipt')}
             </button>
             {latest.type === 'video' && latest.status === 'approved' ? (
               <Link to={`/visit/${latest.id}`} className="btn btn-outline">
-                Open consultation
+                {t('ui.openConsult')}
               </Link>
             ) : (
               <Link to="/my-appointments" className="btn btn-outline">
-                Appointments
+                {t('patient.appointments')}
               </Link>
             )}
             <Link to="/payments" className="btn btn-outline">
-              All payments
+              {t('ui.allPayments')}
             </Link>
           </div>
         </div>

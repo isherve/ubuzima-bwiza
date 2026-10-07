@@ -30,55 +30,60 @@ function isConsultPath(req: IncomingMessage) {
   return path === '/api/consult-chat' || path.endsWith('/api/consult-chat')
 }
 
+function attachConsultApi(middlewares: { use: (fn: (req: IncomingMessage, res: ServerResponse, next: () => void) => void) => void }) {
+  middlewares.use((req, res, next) => {
+    if (!isConsultPath(req)) {
+      next()
+      return
+    }
+    void (async () => {
+      if (req.method === 'OPTIONS') {
+        res.statusCode = 204
+        res.end()
+        return
+      }
+      if (req.method === 'GET') {
+        const id = consultId(req)
+        if (!id) {
+          sendJson(res, 400, { error: 'Missing consultation id' })
+          return
+        }
+        sendJson(res, 200, { messages: listConsultMessages(id) })
+        return
+      }
+      if (req.method !== 'POST') {
+        sendJson(res, 405, { error: 'Method not allowed' })
+        return
+      }
+      const body = JSON.parse((await readBody(req)) || '{}') as {
+        id?: string
+        from?: string
+        role?: string
+        text?: string
+      }
+      const id = consultId(req, body)
+      const message = addConsultMessage(id, {
+        from: body.from ?? '',
+        role: body.role ?? '',
+        text: body.text ?? '',
+      })
+      if (!message) {
+        sendJson(res, 400, { error: 'Enter a message.' })
+        return
+      }
+      sendJson(res, 200, { messages: listConsultMessages(id) })
+    })().catch(() => sendJson(res, 500, { error: 'Chat unavailable' }))
+  })
+}
+
 export function consultApiPlugin(): Plugin {
   return {
     name: 'ubuzima-bwiza-consult-api',
     configureServer(server) {
-      return () => {
-        server.middlewares.use((req, res, next) => {
-          if (!isConsultPath(req)) {
-            next()
-            return
-          }
-          void (async () => {
-            if (req.method === 'OPTIONS') {
-              res.statusCode = 204
-              res.end()
-              return
-            }
-            if (req.method === 'GET') {
-              const id = consultId(req)
-              if (!id) {
-                sendJson(res, 400, { error: 'Missing consultation id' })
-                return
-              }
-              sendJson(res, 200, { messages: listConsultMessages(id) })
-              return
-            }
-            if (req.method !== 'POST') {
-              sendJson(res, 405, { error: 'Method not allowed' })
-              return
-            }
-            const body = JSON.parse((await readBody(req)) || '{}') as {
-              id?: string
-              from?: string
-              role?: string
-              text?: string
-            }
-            const id = consultId(req, body)
-            const message = addConsultMessage(id, {
-              from: body.from ?? '',
-              role: body.role ?? '',
-              text: body.text ?? '',
-            })
-            if (!message) {
-              sendJson(res, 400, { error: 'Enter a message.' })
-              return
-            }
-            sendJson(res, 200, { messages: listConsultMessages(id) })
-          })().catch(() => sendJson(res, 500, { error: 'Chat unavailable' }))
-        })
-      }
+      attachConsultApi(server.middlewares)
+    },
+    configurePreviewServer(server) {
+      attachConsultApi(server.middlewares)
     },
   }
 }

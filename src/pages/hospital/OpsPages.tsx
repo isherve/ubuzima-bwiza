@@ -14,37 +14,39 @@ import {
 } from '../../lib/reports'
 
 export function HospitalDashboardPage() {
+  const { t } = useTranslation()
   const { appointments } = useAuth()
   return (
     <div className="stack">
       <StatGrid
         items={[
-          { label: 'Doctors', value: doctors.length },
-          { label: 'Appointments', value: appointments.length },
-          { label: 'Pending', value: appointments.filter((a) => a.status === 'pending').length },
-          { label: 'Departments', value: 12 },
+          { label: t('hospital.doctors'), value: doctors.length },
+          { label: t('hospital.appointments'), value: appointments.length },
+          { label: t('status.pending'), value: appointments.filter((a) => a.status === 'pending').length },
+          { label: t('ui.departments'), value: 12 },
         ]}
       />
-      <h2>Hospital operations</h2>
-      <p className="lead">Coordinate staff, reception, patient flow, and reports from one workspace.</p>
+      <h2>{t('hospital.operations')}</h2>
+      <p className="lead">{t('ui.hospitalLead')}</p>
     </div>
   )
 }
 
 export function HospitalDoctorsPage() {
+  const { t } = useTranslation()
   return (
     <div className="stack">
-      <h2>Hospital doctors</h2>
+      <h2>{t('ui.hospitalDoctors')}</h2>
       <div className="table">
         {doctors.map((doc) => (
           <div className="table-row" key={doc.id}>
             <div>
               <strong>{doc.name}</strong>
               <p>
-                {doc.specialty} | {doc.hospital}
+                {t(`specialties.${doc.specialty}`, { defaultValue: doc.specialty })} | {doc.hospital}
               </p>
             </div>
-            <span className="meta">{doc.available ? 'Available' : 'Busy'}</span>
+            <span className="meta">{doc.available ? t('ui.available') : t('ui.busy')}</span>
           </div>
         ))}
       </div>
@@ -53,10 +55,11 @@ export function HospitalDoctorsPage() {
 }
 
 export function HospitalPatientsPage() {
+  const { t } = useTranslation()
   const patients = demoUsers.filter((u) => u.role === 'patient')
   return (
     <div className="stack">
-      <h2>Patients</h2>
+      <h2>{t('hospital.patients')}</h2>
       <div className="table">
         {patients.map((p) => (
           <div className="table-row" key={p.id}>
@@ -72,16 +75,17 @@ export function HospitalPatientsPage() {
 }
 
 export function HospitalAppointmentsPage() {
+  const { t } = useTranslation()
   const { appointments } = useAuth()
   return (
     <div className="stack">
-      <h2>Reception appointments</h2>
+      <h2>{t('ui.reception')}</h2>
       <div className="table">
         {appointments.map((apt) => (
           <div className="table-row" key={apt.id}>
             <div>
               <strong>
-                {apt.patientName} with {apt.doctorName}
+                {apt.patientName} {t('ui.with')} {apt.doctorName}
               </strong>
               <p>
                 {apt.date} {apt.time} | {apt.type}
@@ -99,6 +103,7 @@ export function HospitalAppointmentsPage() {
 }
 
 export function HospitalReportsPage() {
+  const { t } = useTranslation()
   const { appointments, user } = useAuth()
   const paidTotal = appointments
     .filter((a) => a.paymentStatus === 'paid')
@@ -123,39 +128,41 @@ export function HospitalReportsPage() {
   return (
     <div className="stack">
       <div className="toolbar">
-        <h2>Reports</h2>
+        <h2>{t('hospital.reports')}</h2>
         <div className="row-actions">
           <button type="button" className="btn btn-outline" onClick={downloadCsv}>
-            Download CSV
+            {t('ui.downloadCsv')}
           </button>
           <button type="button" className="btn btn-primary" onClick={downloadPdf}>
-            Download PDF report
+            {t('ui.downloadPdf')}
           </button>
         </div>
       </div>
       <StatGrid
         items={[
-          { label: 'Appointments', value: appointments.length },
-          { label: 'Paid revenue', value: formatRwf(paidTotal) },
-          { label: 'Unpaid', value: unpaidCount },
+          { label: t('hospital.appointments'), value: appointments.length },
+          { label: t('ui.paidRevenue'), value: formatRwf(paidTotal) },
+          { label: t('patient.unpaid'), value: unpaidCount },
           {
-            label: 'Video visits',
+            label: t('ui.videoVisits'),
             value: appointments.filter((a) => a.type === 'video').length,
           },
         ]}
       />
       <div className="features">
         {[
-          ['Weekly visits', `${appointments.length} appointments on record`],
+          [t('ui.weeklyVisits'), t('ui.appointmentsOnRecord', { count: appointments.length })],
           [
-            'Teleconsult ratio',
-            `${Math.round(
-              (appointments.filter((a) => a.type === 'video').length /
-                Math.max(appointments.length, 1)) *
-                100,
-            )}% video consultations`,
+            t('ui.teleconsultRatio'),
+            t('ui.videoShare', {
+              percent: Math.round(
+                (appointments.filter((a) => a.type === 'video').length /
+                  Math.max(appointments.length, 1)) *
+                  100,
+              ),
+            }),
           ],
-          ['Collections', `${formatRwf(paidTotal)} received | ${unpaidCount} unpaid`],
+          [t('ui.collections'), t('ui.collectionsBody', { paid: formatRwf(paidTotal), unpaid: unpaidCount })],
         ].map(([title, body]) => (
           <article className="feature" key={title}>
             <h3>{title}</h3>
@@ -168,19 +175,20 @@ export function HospitalReportsPage() {
 }
 
 export function HospitalSettingsPage() {
+  const { t } = useTranslation()
   return (
     <div className="stack">
-      <h2>Hospital settings</h2>
+      <h2>{t('ui.hospitalSettings')}</h2>
       <div className="feature">
         <ThemeToggle />
         <p>
-          <strong>Facility:</strong> CHUK
+          <strong>{t('ui.facility')}:</strong> CHUK
         </p>
         <p>
-          <strong>Timezone:</strong> Africa/Kigali
+          <strong>{t('ui.timezone')}:</strong> Africa/Kigali
         </p>
         <p>
-          <strong>Notifications:</strong> Email + SMS enabled
+          <strong>{t('ui.notifications')}:</strong> {t('ui.notificationsOn')}
         </p>
       </div>
     </div>

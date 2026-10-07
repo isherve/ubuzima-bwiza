@@ -25,7 +25,7 @@ export type DbAppointment = {
   notes: string | null
   amount: number
   paymentStatus: 'unpaid' | 'pending' | 'paid' | 'failed' | 'refunded'
-  paymentMethod: 'momo' | 'airtel' | 'card' | 'cash' | null
+  paymentMethod: 'momo' | 'airtel' | 'ussd' | 'card' | 'cash' | null
   paidAt: string | null
   receiptId: string | null
 }
@@ -211,7 +211,7 @@ async function migrateAndSeed() {
       email: 'patient@ubuzimabwiza.com',
       password: 'patient123',
       role: 'patient',
-      phone: '+250 788 100 200',
+      phone: '0781011343',
       specialty: null,
       hospital: null,
     },

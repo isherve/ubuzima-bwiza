@@ -1452,6 +1452,84 @@ h3 {
 .pay-method span { color: var(--ink-soft); font-size:0.8rem; }
 .pay-method.active { border-color: var(--primary); background: var(--primary-soft); }
 
+.ussd-networks { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+.field-label { display: block; font-weight: 700; margin-bottom: 0.4rem; }
+.ussd-wrap { display: grid; gap: 0.75rem; justify-items: center; }
+.ussd-wrap > .btn { width: min(100%, 300px); }
+.ussd-wrap > .field-hint { justify-self: stretch; text-align: center; }
+.ussd-dial {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+}
+.ussd-dial strong { font-size: 1.35rem; letter-spacing: 0.04em; }
+.ussd-phone {
+  width: min(100%, 300px);
+  margin: 0 auto;
+  background: #111827;
+  border-radius: 28px;
+  padding: 0.85rem 0.7rem 0.9rem;
+  box-shadow: var(--shadow);
+}
+.ussd-carrier { color: #d1d5db; font-size: 0.72rem; text-align: center; margin: 0 0 0.45rem; letter-spacing: 0.04em; }
+.ussd-screen {
+  background: #f4f1e8;
+  color: #1c1917;
+  min-height: 210px;
+  border-radius: 8px;
+  padding: 0.8rem 0.75rem;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.ussd-screen p { margin: 0; white-space: pre-wrap; }
+.ussd-notice { color: #9a3412; margin-bottom: 0.45rem !important; }
+.ussd-reply { display: flex; gap: 0.4rem; margin-top: 0.55rem; }
+.ussd-back { width: 100%; margin-top: 0.55rem; }
+.ussd-reply input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 10px;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+}
+.wallet-screen {
+  background: #0f172a;
+  min-height: 230px;
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: grid;
+  align-content: end;
+}
+.wallet-idle { color: #e5e7eb; display: grid; gap: 0.35rem; align-content: center; min-height: 180px; }
+.wallet-idle p { margin: 0; color: #cbd5e1; }
+.wallet-popup {
+  background: #fff;
+  color: #111827;
+  border-radius: 16px;
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.wallet-popup p { margin: 0; }
+.wallet-popup-kicker { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #047857; }
+.wallet-amount { font-size: 1.15rem; font-weight: 800; }
+.wallet-popup label { font-size: 0.75rem; font-weight: 700; }
+.wallet-popup input {
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}
+.wallet-popup .btn { width: 100%; }
+.pay-warn { color: #9a3412; font-size: 0.82rem; margin: 0; }
+
 .pay-checkout { max-width: 640px; }
 .pay-steps {
   list-style: none;

@@ -68,14 +68,10 @@ export function aiApiPlugin(): Plugin {
   return {
     name: 'ubuzima-bwiza-ai-api',
     configureServer(server) {
-      return () => {
-        attachAiApi(server.middlewares)
-      }
+      attachAiApi(server.middlewares)
     },
     configurePreviewServer(server) {
-      return () => {
-        attachAiApi(server.middlewares)
-      }
+      attachAiApi(server.middlewares)
     },
   }
 }

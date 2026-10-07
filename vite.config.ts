@@ -4,6 +4,7 @@ import { aiApiPlugin } from './plugins/aiApi.ts'
 import { contactApiPlugin } from './plugins/contactApi.ts'
 import { consultApiPlugin } from './plugins/consultApi.ts'
 import { dataApiPlugin } from './plugins/dataApi.ts'
+import { ussdApiPlugin } from './plugins/ussdApi.ts'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -15,15 +16,19 @@ export default defineConfig(({ mode }) => {
   if (env.CONTACT_TO?.trim()) process.env.CONTACT_TO = env.CONTACT_TO.trim()
   if (env.DATABASE_URL?.trim()) process.env.DATABASE_URL = env.DATABASE_URL.trim()
   if (env.AUTH_SECRET?.trim()) process.env.AUTH_SECRET = env.AUTH_SECRET.trim()
+  if (env.AT_SERVICE_CODE?.trim()) process.env.AT_SERVICE_CODE = env.AT_SERVICE_CODE.trim()
+  if (env.AT_USERNAME?.trim()) process.env.AT_USERNAME = env.AT_USERNAME.trim()
+  if (env.AT_API_KEY?.trim()) process.env.AT_API_KEY = env.AT_API_KEY.trim()
 
   const githubPages = process.env.GITHUB_PAGES === 'true'
 
   return {
     base: githubPages ? '/ubuzima-bwiza/' : '/',
-    plugins: [react(), dataApiPlugin(), aiApiPlugin(), contactApiPlugin(), consultApiPlugin()],
+    plugins: [react(), dataApiPlugin(), ussdApiPlugin(), aiApiPlugin(), contactApiPlugin(), consultApiPlugin()],
     server: {
       port: 5173,
       host: true,
+      allowedHosts: true,
     },
   }
 })

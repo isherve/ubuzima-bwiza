@@ -3,10 +3,12 @@ import type { FormEvent } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { EmptyState } from '../components/dashboard/Shell'
 import { useAuth } from '../context/AuthContext'
+import { translateSpecialty, useAppText } from '../context/ContentContext'
 import { doctors, specialties } from '../data'
 import { askHealthAi } from '../lib/aiClient'
 
 export function DoctorsPage() {
+  const { t } = useAppText()
   const [params] = useSearchParams()
   const specialty = params.get('specialty')?.toLowerCase() ?? ''
   const query = params.get('q')?.toLowerCase() ?? ''
@@ -27,16 +29,16 @@ export function DoctorsPage() {
   return (
     <section className="section" style={{ paddingTop: '1.5rem' }}>
       <div className="container">
-        <p className="pill">Directory</p>
-        <h1>Medical specialists you can trust</h1>
-        <p className="lead">Browse verified doctors across Rwanda and book in a few clicks.</p>
+        <p className="pill">{t('ui.directory')}</p>
+        <h1>{t('doctors.title')}</h1>
+        <p className="lead">{t('ui.doctorsLead')}</p>
 
         <div className="filter-bar">
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-            <option value="">All specialties</option>
+            <option value="">{t('doctors.allSpecialties')}</option>
             {specialties.map((item) => (
               <option key={item} value={item.toLowerCase()}>
-                {item}
+                {translateSpecialty(item, t)}
               </option>
             ))}
           </select>
@@ -44,7 +46,7 @@ export function DoctorsPage() {
 
         <div className="doctors">
           {filtered.length === 0 ? (
-            <EmptyState text="No specialists matched your search." />
+            <EmptyState text={t('doctors.noMatch')} />
           ) : (
             filtered.map((doctor) => (
               <article className="doctor-card" key={doctor.id}>
@@ -53,20 +55,20 @@ export function DoctorsPage() {
                   <div>
                     <h3>{doctor.name}</h3>
                     <p className="meta">
-                      {doctor.specialty} | {doctor.hospital}
+                      {translateSpecialty(doctor.specialty, t)} | {doctor.hospital}
                     </p>
                     <p className="meta">
-                      {doctor.rating} ({doctor.reviews} reviews) | {doctor.fee.toLocaleString()} RWF
+                      {doctor.rating} ({doctor.reviews} {t('ui.reviews')}) | {doctor.fee.toLocaleString()} RWF
                     </p>
-                    <p className="meta">{doctor.available ? 'Available today' : 'Next slots tomorrow'}</p>
+                    <p className="meta">{doctor.available ? t('doctors.availableToday') : t('ui.nextSlots')}</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <Link to={`/book/${doctor.id}`} className="btn btn-primary">
-                    Book
+                    {t('common.book')}
                   </Link>
                   <Link to={`/doctors/${doctor.id}`} className="btn btn-outline">
-                    Profile
+                    {t('common.profile')}
                   </Link>
                 </div>
               </article>
@@ -79,9 +81,10 @@ export function DoctorsPage() {
 }
 
 export function DoctorProfilePage() {
+  const { t, text } = useAppText()
   const { id } = useParams()
   const doctor = doctors.find((d) => d.id === id)
-  if (!doctor) return <EmptyState text="Doctor not found." />
+  if (!doctor) return <EmptyState text={t('ui.doctorNotFound')} />
 
   return (
     <section className="section">
@@ -93,18 +96,18 @@ export function DoctorProfilePage() {
           <div>
             <h1>{doctor.name}</h1>
             <p className="meta">
-              {doctor.specialty} | {doctor.hospital}
+              {translateSpecialty(doctor.specialty, t)} | {doctor.hospital}
             </p>
           </div>
         </div>
-        <p>{doctor.bio}</p>
+        <p>{text(`doctors.${doctor.id}Bio`, doctor.bio)}</p>
         <p className="meta" style={{ marginTop: '0.75rem' }}>
-          Consultation fee: {doctor.fee.toLocaleString()} RWF | {doctor.rating} ({doctor.reviews}{' '}
-          reviews)
+          {t('ui.consultationFee')}: {doctor.fee.toLocaleString()} RWF | {doctor.rating} ({doctor.reviews}{' '}
+          {t('ui.reviews')})
         </p>
         <div style={{ marginTop: '1.25rem' }}>
           <Link to={`/book/${doctor.id}`} className="btn btn-primary">
-            Book appointment
+            {t('ui.bookAppointment')}
           </Link>
         </div>
       </div>
@@ -113,6 +116,7 @@ export function DoctorProfilePage() {
 }
 
 export function BookAppointmentPage() {
+  const { t } = useAppText()
   const { id } = useParams()
   const { user, bookAppointment } = useAuth()
   const navigate = useNavigate()
@@ -125,7 +129,7 @@ export function BookAppointmentPage() {
   const [aiTip, setAiTip] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
 
-  if (!doctor) return <EmptyState text="Doctor not found." />
+  if (!doctor) return <EmptyState text={t('ui.doctorNotFound')} />
 
   const askAiPrep = async () => {
     setAiLoading(true)
@@ -141,7 +145,7 @@ export function BookAppointmentPage() {
         setNotes(result.reply.split('\n')[0]?.slice(0, 120) || '')
       }
     } catch {
-      setAiTip('Bring a list of medications, allergies, and when symptoms started.')
+      setAiTip(t('ui.aiFallback'))
     } finally {
       setAiLoading(false)
     }
@@ -167,28 +171,28 @@ export function BookAppointmentPage() {
   return (
     <section className="section">
       <div className="container" style={{ maxWidth: 640 }}>
-        <p className="pill">Booking</p>
-        <h1>Book with {doctor.name}</h1>
+        <p className="pill">{t('ui.booking')}</p>
+        <h1>{t('ui.bookWith', { name: doctor.name })}</h1>
         <p className="lead">
-          {doctor.specialty} · {doctor.hospital}
+          {translateSpecialty(doctor.specialty, t)} · {doctor.hospital}
         </p>
         <div className="pay-invoice" style={{ marginBottom: '1.25rem' }}>
           <div className="pay-invoice-head">
             <div>
-              <p className="eyebrow">Consultation fee</p>
+              <p className="eyebrow">{t('ui.consultationFee')}</p>
               <h3>{doctor.name}</h3>
             </div>
             <strong>{doctor.fee.toLocaleString()} RWF</strong>
           </div>
-          <p className="field-hint">You will review and pay this invoice in the next step.</p>
+          <p className="field-hint">{t('ui.feeNext')}</p>
         </div>
         <form className="search-card auth-form" onSubmit={onSubmit}>
           <div className="field">
-            <label htmlFor="date">Date *</label>
+            <label htmlFor="date">{t('ui.date')} *</label>
             <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
           </div>
           <div className="field">
-            <label htmlFor="time">Time *</label>
+            <label htmlFor="time">{t('ui.time')} *</label>
             <select id="time" value={time} onChange={(e) => setTime(e.target.value)}>
               {['09:00', '10:00', '11:00', '14:00', '15:30', '16:30'].map((slot) => (
                 <option key={slot} value={slot}>
@@ -198,26 +202,26 @@ export function BookAppointmentPage() {
             </select>
           </div>
           <div className="field">
-            <label htmlFor="type">Visit type *</label>
+            <label htmlFor="type">{t('ui.visitType')} *</label>
             <select
               id="type"
               value={type}
               onChange={(e) => setType(e.target.value as 'in-person' | 'video')}
             >
-              <option value="video">Video consultation</option>
-              <option value="in-person">In-person</option>
+              <option value="video">{t('ui.video')}</option>
+              <option value="in-person">{t('ui.inPerson')}</option>
             </select>
           </div>
           <div className="field">
-            <label htmlFor="notes">Notes</label>
-            <input id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Symptoms or reason" />
+            <label htmlFor="notes">{t('ui.notes')}</label>
+            <input id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={t('ui.symptoms')} />
           </div>
           <button type="button" className="btn btn-outline" onClick={() => void askAiPrep()} disabled={aiLoading}>
-            {aiLoading ? 'AI preparing…' : 'AI prepare visit notes'}
+            {aiLoading ? t('ui.aiPreparing') : t('ui.aiPrepare')}
           </button>
           {aiTip ? <p className="success">{aiTip}</p> : null}
           <button className="btn btn-primary btn-full" type="submit">
-            {user ? 'Confirm booking and pay' : 'Login to book'}
+            {user ? t('ui.confirmPay') : t('ui.loginToBook')}
           </button>
           {message ? <p className="success">{message}</p> : null}
         </form>

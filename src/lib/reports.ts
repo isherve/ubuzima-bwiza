@@ -62,6 +62,8 @@ export function methodLabel(method?: PaymentMethod) {
       return 'MTN MoMo'
     case 'airtel':
       return 'Airtel Money'
+    case 'ussd':
+      return 'USSD'
     case 'card':
       return 'Card'
     case 'cash':

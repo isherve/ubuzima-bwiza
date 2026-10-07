@@ -85,7 +85,17 @@ export function DashboardShell({ titleKey }: { titleKey: string }) {
             Ubuzima <span className="brand-accent">Bwiza</span>
           </span>
         </Link>
-        <p className="dash-role">{user.role.toUpperCase()}</p>
+        <p className="dash-role">
+          {t(
+            user.role === 'doctor'
+              ? 'auth.roleDoctor'
+              : user.role === 'hospital'
+                ? 'auth.roleHospital'
+                : user.role === 'admin'
+                  ? 'ui.roleAdmin'
+                  : 'auth.rolePatient',
+          )}
+        </p>
         <nav className="dash-nav">
           {links.map(([to, labelKey]) => (
             <NavLink key={to} to={to} end={to.split('/').length <= 2}>

@@ -4,8 +4,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
 import { dashboardPath, useAuth } from '../context/AuthContext'
+import { useAppText } from '../context/ContentContext'
 
 export function LoginPage() {
+  const { t } = useAppText()
   const { login } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('patient@ubuzimabwiza.com')
@@ -40,25 +42,22 @@ export function LoginPage() {
       <div className="auth-grid">
         <aside className="auth-aside">
           <div>
-            <p className="eyebrow">SECURE ACCESS</p>
-            <h1>Welcome back to Ubuzima Bwiza</h1>
-            <p className="intro">
-              Access your healthcare dashboard, manage appointments, and connect with trusted
-              medical professionals across Rwanda.
-            </p>
+            <p className="eyebrow">{t('ui.secureAccess')}</p>
+            <h1>{t('auth.welcomeBack')}</h1>
+            <p className="intro">{t('ui.welcomeIntro')}</p>
           </div>
           <div className="role-cards">
             <div className="role-card">
-              <p className="label">FOR PATIENTS</p>
-              <p>Book appointments with verified doctors, access records, and manage care.</p>
+              <p className="label">{t('ui.forPatients')}</p>
+              <p>{t('ui.patientCard')}</p>
             </div>
             <div className="role-card">
-              <p className="label">FOR DOCTORS</p>
-              <p>Manage your practice, communicate with patients, and grow digitally.</p>
+              <p className="label">{t('ui.forDoctors')}</p>
+              <p>{t('ui.doctorCard')}</p>
             </div>
             <div className="role-card">
-              <p className="label">FOR HOSPITALS</p>
-              <p>Coordinate patient care, manage staff, and streamline operations.</p>
+              <p className="label">{t('ui.forHospitals')}</p>
+              <p>{t('ui.hospitalCard')}</p>
             </div>
           </div>
         </aside>
@@ -66,34 +65,34 @@ export function LoginPage() {
         <main className="auth-main">
           <form className="auth-card" onSubmit={onSubmit}>
             <div>
-              <p className="eyebrow">Unified Access</p>
-              <h2>Access your Ubuzima Bwiza account</h2>
-              <p className="sub">Use one secure login to access every Ubuzima Bwiza workspace.</p>
+              <p className="eyebrow">{t('ui.unifiedAccess')}</p>
+              <h2>{t('ui.accessAccount')}</h2>
+              <p className="sub">{t('ui.accessSubtitle')}</p>
             </div>
 
             <div className="demo-box">
-              <strong>Demo accounts</strong>
+              <strong>{t('auth.demoAccounts')}</strong>
               <button type="button" onClick={() => { setEmail('patient@ubuzimabwiza.com'); setPassword('patient123') }}>
-                Patient | patient@ubuzimabwiza.com / patient123
+                {t('auth.rolePatient')} | patient@ubuzimabwiza.com / patient123
               </button>
               <button type="button" onClick={() => { setEmail('doctor@ubuzimabwiza.com'); setPassword('doctor123') }}>
-                Doctor | doctor@ubuzimabwiza.com / doctor123
+                {t('auth.roleDoctor')} | doctor@ubuzimabwiza.com / doctor123
               </button>
               <button type="button" onClick={() => { setEmail('hospital@ubuzimabwiza.com'); setPassword('hospital123') }}>
-                Hospital | hospital@ubuzimabwiza.com / hospital123
+                {t('auth.roleHospital')} | hospital@ubuzimabwiza.com / hospital123
               </button>
               <button type="button" onClick={() => { setEmail('admin@ubuzimabwiza.com'); setPassword('admin123') }}>
-                Admin | admin@ubuzimabwiza.com / admin123
+                {t('ui.roleAdmin')} | admin@ubuzimabwiza.com / admin123
               </button>
             </div>
 
             <div className="auth-form">
               <div className="field">
-                <label htmlFor="email">Email *</label>
+                <label htmlFor="email">{t('ui.email')} *</label>
                 <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
               <div className="field">
-                <label htmlFor="password">Password *</label>
+                <label htmlFor="password">{t('ui.password')} *</label>
                 <div className="password-wrap">
                   <input
                     id="password"
@@ -103,23 +102,23 @@ export function LoginPage() {
                     required
                   />
                   <button type="button" className="password-toggle" onClick={() => setShowPassword((v) => !v)}>
-                    {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? t('ui.hide') : t('ui.show')}
                   </button>
                 </div>
                 <div className="forgot">
-                  <Link to="/forgot-password">Forgot password?</Link>
+                  <Link to="/forgot-password">{t('auth.forgotPassword')}</Link>
                 </div>
               </div>
               {error ? <p className="error">{error}</p> : null}
               <button className="login-btn" type="submit" disabled={loading}>
-                {loading ? 'Processing...' : 'Login'}
+                {loading ? t('ui.processing') : t('ui.login')}
               </button>
-              <div className="or-row"><span>OR</span></div>
-              <button type="button" className="google-btn" onClick={() => setError('Google sign-in is temporarily unavailable. Please use your email and password.')}>
-                Login with Google
+              <div className="or-row"><span>{t('ui.or')}</span></div>
+              <button type="button" className="google-btn" onClick={() => setError(t('auth.googleDemo'))}>
+                {t('auth.loginGoogle')}
               </button>
               <p className="auth-switch">
-                Don&apos;t have an account? <Link to="/register">Sign up here</Link>
+                {t('ui.noAccount')} <Link to="/register">{t('ui.signUpHere')}</Link>
               </p>
             </div>
           </form>

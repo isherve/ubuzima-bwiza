@@ -64,14 +64,10 @@ export function contactApiPlugin(): Plugin {
   return {
     name: 'ubuzima-bwiza-contact-api',
     configureServer(server) {
-      return () => {
-        attachContactApi(server.middlewares)
-      }
+      attachContactApi(server.middlewares)
     },
     configurePreviewServer(server) {
-      return () => {
-        attachContactApi(server.middlewares)
-      }
+      attachContactApi(server.middlewares)
     },
   }
 }

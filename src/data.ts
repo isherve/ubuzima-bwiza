@@ -24,7 +24,7 @@ export type Doctor = {
 }
 
 export type PaymentStatus = 'unpaid' | 'pending' | 'paid' | 'failed' | 'refunded'
-export type PaymentMethod = 'momo' | 'airtel' | 'card' | 'cash'
+export type PaymentMethod = 'momo' | 'airtel' | 'ussd' | 'card' | 'cash'
 
 export type Appointment = {
   id: string
@@ -66,7 +66,7 @@ export const demoUsers: Array<User & { password: string }> = [
     email: 'patient@ubuzimabwiza.com',
     password: 'patient123',
     role: 'patient',
-    phone: '+250 788 100 200',
+    phone: '0781011343',
   },
   {
     id: 'd1',

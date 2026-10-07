@@ -110,14 +110,10 @@ export function dataApiPlugin(): Plugin {
   return {
     name: 'ubuzima-bwiza-data-api',
     configureServer(server) {
-      return () => {
-        attach(server.middlewares)
-      }
+      attach(server.middlewares)
     },
     configurePreviewServer(server) {
-      return () => {
-        attach(server.middlewares)
-      }
+      attach(server.middlewares)
     },
   }
 }
