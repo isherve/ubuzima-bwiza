@@ -1,4 +1,4 @@
-import { getSql } from './db.js'
+import { getSql, markAppointmentPaid } from './db.js'
 
 export const USSD_MERCHANT_CODE = '550120'
 
@@ -127,5 +127,14 @@ export async function africastalkingUssd(input: { text?: string; phoneNumber?: s
   }
   if (steps.length === 3) return con(`Enter PIN to pay ${invoice.amountLabel}`)
   if (!/^\d{4}$/.test(steps[3] || '')) return con('Enter the 4-digit PIN. It is not stored.')
-  return end(`Payment received\n${invoice.invoice}\n${invoice.amountLabel}\nUbuzima Bwiza`)
+  const phone = ussdPhoneKey(input.phoneNumber || '')
+  const local = phone.startsWith('250') ? `0${phone.slice(3)}` : phone
+  const method = local.startsWith('072') || local.startsWith('073') ? 'airtel' : 'momo'
+  const receiptId = `RCP-${Date.now().toString().slice(-8)}`
+  const paid = await markAppointmentPaid(invoice.appointmentId, method, receiptId, new Date().toISOString())
+  openInvoices.delete(phone)
+  const sql = getSql()
+  await sql`DELETE FROM ussd_checkouts WHERE phone = ${phone}`
+  if (!paid) return end(`This invoice is already paid.\n${invoice.invoice}\nUbuzima Bwiza`)
+  return end(`Payment received\n${invoice.invoice}\n${invoice.amountLabel}\n${receiptId}\nUbuzima Bwiza`)
 }

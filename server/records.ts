@@ -174,7 +174,7 @@ export async function changeAppointment(
         return { status: 403, body: { ok: false, message: 'You cannot pay this appointment.' } }
       }
       if (current.paymentStatus === 'paid') {
-        return { status: 409, body: { ok: false, message: 'Payment already completed or appointment missing.' } }
+        return { status: 200, body: { ok: true, message: 'Payment received.', receiptId: current.receiptId, appointment: current } }
       }
       const receiptId = `RCP-${Date.now().toString().slice(-8)}`
       const paid = await markAppointmentPaid(id, input.paymentMethod, receiptId, new Date().toISOString())
