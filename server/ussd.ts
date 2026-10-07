@@ -1,4 +1,4 @@
-import { getSql } from './db.ts'
+import { getSql } from './db.js'
 
 export const USSD_MERCHANT_CODE = '550120'
 

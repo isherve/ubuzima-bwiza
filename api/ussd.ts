@@ -13,5 +13,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
   res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-  res.status(200).send(await africastalkingUssd(ussdFieldsFrom(req.body)))
+  try {
+    res.status(200).send(await africastalkingUssd(ussdFieldsFrom(req.body)))
+  } catch (error) {
+    console.error(error)
+    res.status(200).send('END USSD menu is unavailable right now.')
+  }
 }
